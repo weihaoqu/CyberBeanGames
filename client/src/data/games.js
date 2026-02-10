@@ -1,0 +1,58 @@
+const games = [
+  {
+    slug: "cyberanalyst",
+    title: "Cyber Analyst Dashboard",
+    creator: "Ziv",
+    description: "An interactive cybersecurity analyst training tool. Step into the role of a security operations center analyst and learn to identify threats.",
+    color: "#00ffff",
+    icon: "🛡️",
+    path: "/games/cyberanalyst/index.html",
+  },
+  {
+    slug: "password-challenge",
+    title: "Password Security Challenge",
+    creator: "Eric & Mat",
+    description: "Test your knowledge of password security in this interactive challenge. Learn what makes passwords strong or weak.",
+    color: "#ff00ff",
+    icon: "🔐",
+    path: "/games/CS450/index.html",
+  },
+  {
+    slug: "hack-the-system",
+    title: "Hack the System",
+    creator: "Lynda",
+    description: "A timed ethical hacking simulator with 15 real-world cybersecurity scenarios. Can you secure all systems before time runs out?",
+    color: "#ff006b",
+    icon: "⚡",
+    path: "/games/CyberGame/index.html",
+  },
+  {
+    slug: "access-control",
+    title: "Access Control Simulator",
+    creator: "Brian",
+    description: "An interactive simulator that teaches access control concepts. Learn about permissions, roles, and security policies.",
+    color: "#0066ff",
+    icon: "🔑",
+    path: "/games/CS450-github/index.html",
+  },
+  {
+    slug: "lab-escape",
+    title: "Malware Lab Escape",
+    creator: "Matt",
+    description: "A strategic grid-based game where you defend a network from spreading malware. Use Scan, Patch, Quarantine, and Delete to survive.",
+    color: "#00ff41",
+    icon: "🧬",
+    path: "/games/labEscape/index.html",
+  },
+  {
+    slug: "phishtank",
+    title: "PhishTank",
+    creator: "Chris",
+    description: "An AI-powered phishing detection game. Use Google's Gemini AI to identify and analyze phishing attempts in real-time.",
+    color: "#ff4400",
+    icon: "🎣",
+    path: "/games/PhishTank/index.html",
+  },
+];
+
+export default games;

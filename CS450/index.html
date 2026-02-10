@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Security Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0f0f23, #1a1a2e);
+            color: #00ff00;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+            text-shadow: 0 0 10px #ff6b6b;
+            font-size: 2em;
+        }
+
+        .warning {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid #ff6b6b;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ffff00;
+        }
+
+        .target-display {
+            background: rgba(0, 50, 0, 0.8);
+            border: 1px solid #00ff00;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .target-display h2 {
+            color: #ffff00;
+            margin-bottom: 10px;
+        }
+
+        .target-name {
+            font-size: 1.5em;
+            color: #00ff00;
+            margin: 10px 0;
+        }
+
+        .view-profile-btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .view-profile-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .password-section {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00ff00;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .password-display {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .password-boxes {
+            display: inline-flex;
+            gap: 5px;
+            margin: 20px 0;
+        }
+
+        .password-box {
+            width: 40px;
+            height: 50px;
+            border: 2px solid #00ff00;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ffff00;
+            border-radius: 5px;
+        }
+
+        .input-section {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        #passwordInput {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            font-family: 'Courier New', monospace;
+            border-radius: 5px;
+            width: 300px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        #passwordInput:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(238, 90, 36, 0.4);
+        }
+
+        .attempts {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.2em;
+        }
+
+        .attempts-left {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .feedback {
+            background: rgba(0, 0, 0, 0.9);
+            border-left: 4px solid #ffff00;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            min-height: 60px;
+        }
+
+        .feedback.success {
+            border-left-color: #00ff00;
+            color: #00ff00;
+        }
+
+        .feedback.error {
+            border-left-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+
+        .hints {
+            background: rgba(50, 50, 0, 0.8);
+            border: 1px solid #ffff00;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .hints h3 {
+            color: #ffff00;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ffff00, #00ff00);
+            transition: width 0.3s ease;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .social-media-page {
+            max-width: 600px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 10px;
+            margin: 20px auto;
+            box-shadow: 0 0 50px rgba(0, 255, 0, 0.5);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            color: #000;
+            position: relative;
+        }
+
+        .close-modal {
+            position: sticky;
+            top: 10px;
+            right: 10px;
+            float: right;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            z-index: 10;
+            margin: 10px;
+        }
+
+        .close-modal:hover {
+            background: #ee5a24;
+        }
+
+        .sm-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .sm-profile {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .sm-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            border: 3px solid #667eea;
+            overflow: hidden;
+        }
+
+        .sm-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sm-info h2 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+
+        .sm-username {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .sm-bio {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .sm-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            background: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .sm-stat {
+            text-align: center;
+        }
+
+        .sm-stat-number {
+            font-weight: bold;
+            font-size: 1.3em;
+            color: #333;
+        }
+
+        .sm-stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .sm-posts {
+            background: #fff;
+        }
+
+        .sm-post {
+            border-bottom: 1px solid #ddd;
+            padding: 20px;
+        }
+
+        .sm-post-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .sm-post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+        }
+
+        .sm-post-info h4 {
+            margin: 0;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .sm-post-time {
+            color: #999;
+            font-size: 0.85em;
+        }
+
+        .sm-post-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 3em;
+            overflow: hidden;
+        }
+
+        .sm-post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sm-post-caption {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .sm-post-actions {
+            display: flex;
+            gap: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .sm-action {
+            color: #666;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+
+        .sm-action:hover {
+            color: #667eea;
+        }
+
+        .sm-likes {
+            font-weight: 600;
+            color: #333;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔓 PASSWORD SECURITY CHALLENGE 🔓</h1>
+        
+        <div class="warning">
+            ⚠️ EDUCATIONAL PURPOSE: This demonstrates why sharing personal info online is risky!
+        </div>
+
+        <div class="target-display">
+            <h2>🎯 CURRENT TARGET</h2>
+            <div class="target-name" id="targetName">---</div>
+            <button class="view-profile-btn" id="viewProfileBtn">
+                📱 VIEW SOCIAL MEDIA PROFILE
+            </button>
+            <p style="color: #88ff88; margin-top: 10px;">
+                💡 Investigate their profile to find password clues!
+            </p>
+        </div>
+
+        <div class="password-section">
+            <div class="password-display">
+                <h3>PASSWORD: 8 CHARACTERS</h3>
+                <div class="password-boxes" id="passwordBoxes"></div>
+            </div>
+
+            <div class="attempts">
+                Attempts remaining: <span class="attempts-left" id="attemptsLeft">3</span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+
+            <div class="input-section">
+                <input type="text" id="passwordInput" placeholder="ENTER PASSWORD" maxlength="8">
+                <br>
+                <button class="btn" id="crackBtn">🔑 CRACK PASSWORD</button>
+                <button class="btn" id="newTargetBtn">🔄 NEW TARGET</button>
+            </div>
+
+            <div class="feedback" id="feedback">
+                Click "VIEW SOCIAL MEDIA PROFILE" to investigate your target!
+            </div>
+
+            <div class="hints" id="hints" style="display: none;">
+                <h3>🔐 PASSWORD PATTERN HINTS</h3>
+                <div id="hintsContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="social-media-page" id="socialMediaPage">
+            <button class="close-modal" id="closeModalBtn">×</button>
+            
+            <div class="sm-header">
+                <h1 style="margin: 0;">SocialHub</h1>
+                <p style="margin: 5px 0 0 0; opacity: 0.9;">Connect • Share • Inspire</p>
+            </div>
+
+                        <div class="sm-profile">
+                <div class="sm-avatar" id="smAvatar">
+                    👤
+                </div>
+                <div class="sm-info">
+                    <h2 id="smName">---</h2>
+                    <div class="sm-username" id="smUsername">@username</div>
+                    <div class="sm-bio" id="smBio">Bio loading...</div>
+                </div>
+            </div>
+
+            <div class="sm-stats">
+                <div class="sm-stat">
+                    <div class="sm-stat-number" id="smPosts">0</div>
+                    <div class="sm-stat-label">Posts</div>
+                </div>
+                <div class="sm-stat">
+                    <div class="sm-stat-number" id="smFollowers">---</div>
+                    <div class="sm-stat-label">Followers</div>
+                </div>
+                <div class="sm-stat">
+                    <div class="sm-stat-number" id="smFollowing">---</div>
+                    <div class="sm-stat-label">Following</div>
+                </div>
+            </div>
+
+            <div class="sm-posts" id="smPostsContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        const targets = [
+            {
+                name: "Jessica Martinez",
+                username: "@jess.travels.world",
+                bio: "✈️ Travel addict | 📸 Photography lover | 🐕 Dog mom to Luna",
+                followers: "2.4K",
+                following: "892",
+                profileImage: "imagess/image1.png",
+                posts: [
+                    {
+                        time: "2 days ago",
+                        image: "imagess/image2.png",
+                        caption: "Celebrating 27 years around the sun! 🎂✨ Best birthday ever in Paris! Feeling grateful for this amazing life. #BirthdayVibes #27 #ParisLife #2024",
+                        likes: 543
+                    },
+                    {
+                        time: "1 week ago",
+                        image: "imagess/image3.png",
+                        caption: "My girl Luna is 3 today! 🎉🐕 Can't believe how fast she's grown. Best golden retriever ever! She's been my adventure buddy since day one. #DogBirthday #GoldenRetriever #Luna",
+                        likes: 892
+                    },
+                    {
+                        time: "2 weeks ago",
+                        image: "imagess/image4.png",
+                        caption: "Throwback to graduation 2019! 🎓 5 years ago today I walked across that stage. Time flies when you're living your dreams! #TBT #Graduation #ClassOf2019",
+                        likes: 445
+                    }
+                ],
+                password: "LUNA1997",
+                hints: [
+                    "Pet names combined with birth years are extremely common",
+                    "Calculate: 27 years old in 2024 = born in 1997",
+                    "The most frequently mentioned companion's name"
+                ]
+            },
+            {
+                name: "Marcus Thompson",
+                username: "@m_thompson_fit",
+                bio: "💪 Personal Trainer | 🏋️ CrossFit Coach | 🎮 Gamer | Living life one rep at a time!",
+                followers: "5.2K",
+                following: "1.2K",
+                profileImage: "imagess/image5.png",
+                posts: [
+                    {
+                        time: "3 days ago",
+                        image: "imagess/image6.png",
+                        caption: "New PR today! 💪 Rex was here cheering me on as always. My gym buddy for life! 🐕 We've been crushing goals together since I got him. #FitnessJourney #GymLife #WorkoutPartner",
+                        likes: 1203
+                    },
+                    {
+                        time: "1 week ago",
+                        image: "imagess/image7.png",
+                        caption: "Turning 31 in 2024 and I've never felt stronger! 🎂💪 Here's to another year of gains and growth. Age is just a number! #BirthdayWorkout #31AndStrong #FitnessGoals",
+                        likes: 876
+                    },
+                    {
+                        time: "3 weeks ago",
+                        image: "imagess/image8.png",
+                        caption: "Found this gem from 1993! 👶 Baby Marcus vibes. Mom kept all these old photos and I'm here for it. #ThrowbackThursday #1993 #Memories #OldSchool",
+                        likes: 654
+                    }
+                ],
+                password: "REX93MTH",
+                hints: [
+                    "Username initials often appear in passwords",
+                    "Pet + birth year + first/last initials is a common pattern",
+                    "Look for the companion mentioned in workouts"
+                ]
+            },
+            {
+                name: "Olivia Chen",
+                username: "@olivia.creates",
+                bio: "🎨 Graphic Designer | 🐱 Cat mom | ☕ Coffee enthusiast | Creating beautiful things daily",
+                followers: "8.7K",
+                following: "2.3K",
+                profileImage: "imagess/image9.png",
+                posts: [
+                    {
+                        time: "1 day ago",
+                        image: "imagess/image10.png",
+                        caption: "Mittens photobombing my workspace again! 😹 She's been my work-from-home companion since 2020. Best quarantine decision ever getting this fluffy troublemaker. #CatsOfInstagram #WorkFromHome #CatLife",
+                        likes: 1876
+                    },
+                    {
+                        time: "5 days ago",
+                        image: "imagess/image11.png",
+                        caption: "Quarter century! 🎂✨ 25 years young today and feeling grateful for this creative journey. Thanks everyone for the birthday love! #Birthday2024 #25 #Grateful",
+                        likes: 2341
+                    },
+                    {
+                        time: "2 weeks ago",
+                        image: "imagess/image12.png",
+                        caption: "Found my 2017 high school ID card! 😂 I was such a baby back then. Can't believe that was 7 years ago! Time really flies. #ThrowbackThursday #HighSchool #2017Memories",
+                        likes: 987
+                    }
+                ],
+                password: "MITT99OC",
+                hints: [
+                    "Pet names are often abbreviated to first 4 letters",
+                    "Age 25 in 2024 = born 1999",
+                    "First and last initials commonly end passwords"
+                ]
+            },
+            {
+                name: "Tyler Rodriguez",
+                username: "@tyler.codes",
+                bio: "👨‍💻 Full Stack Developer | 🎸 Weekend musician | 🐕 Owner of the laziest beagle",
+                followers: "3.9K",
+                following: "1.5K",
+                profileImage: "imagess/image13.png",
+                posts: [
+                    {
+                        time: "2 days ago",
+                        image: "imagess/image14.png",
+                        caption: "Buddy FINALLY learned to fetch! 🐕 Only took 4 years of training lol. He's the laziest but sweetest beagle ever. Best decision getting him back in the day. #BeagleLife #DogTraining #BuddyTheDog",
+                        likes: 756
+                    },
+                    {
+                        time: "1 week ago",
+                        image: "imagess/image15.png",
+                        caption: "Officially 29! 🎂 Late twenties hit different. Grateful for another trip around the sun. Here's to 2024 being the best year yet! #BirthdayVibes #29 #NewYear",
+                        likes: 923
+                    },
+                    {
+                        time: "2 weeks ago",
+                        image: "imagess/image16.png",
+                        caption: "College reunion with the crew! 🎓 Class of 2017 represents. Can't believe we graduated 7 years ago. Time flies when you're debugging code! #CollegeReunion #ClassOf2017 #GoodTimes",
+                        likes: 1134
+                    }
+                ],
+                password: "BUDDY95T",
+                hints: [
+                    "Simple pattern: pet name + birth year + first initial",
+                    "Calculate: 29 in 2024 = born 1995",
+                    "The companion's name appears multiple times"
+                ]
+            },
+            {
+                name: "Aisha Patel",
+                username: "@aisha_wellness",
+                bio: "🧘‍♀️ Yoga Instructor | 🌱 Plant-based life | 🐈 Rescued cat mom | Namaste 🙏",
+                followers: "12.3K",
+                following: "3.4K",
+                profileImage: "imagess/image17.png",
+                posts: [
+                    {
+                        time: "1 day ago",
+                        image: "imagess/image18.png",
+                        caption: "Shadow loves supervising classes! 🐈‍⬛ He's been my studio assistant for 2 years now. Best black cat ever. Everyone who comes in falls in love with him. #YogaLife #CatsAndYoga #StudioLife",
+                        likes: 2156
+                    },
+                    {
+                        time: "4 days ago",
+                        image: "imagess/image19.png",
+                        caption: "32 trips around the sun! 🎂✨ Celebrating with sunrise yoga today. Feeling blessed and grateful for this journey. Another year wiser! #Birthday2024 #32 #YogaBirthday #Grateful",
+                        likes: 3421
+                    },
+                    {
+                        time: "3 weeks ago",
+                        image: "imagess/image20.png",
+                        caption: "Throwback to 2018 when I completed my yoga teacher training! 🧘‍♀️ 6 years ago I took a leap of faith and it changed my life forever. Best decision ever! #ThrowbackThursday #YogaTeacher #2018Memories",
+                        likes: 1876
+                    }
+                ],
+                password: "SHAD92AP",
+                hints: [
+                    "Pet names abbreviated to 4 letters is very common",
+                    "Birth year: 32 in 2024 = 1992",
+                    "First initial + last initial pattern at the end"
+                ]
+            }
+        ];
+
+        let currentTarget = null;
+        let attemptsLeft = 3;
+        let gameWon = false;
+
+        function newTarget() {
+            currentTarget = targets[Math.floor(Math.random() * targets.length)];
+            attemptsLeft = 3;
+            gameWon = false;
+            displayTargetName();
+            resetPasswordDisplay();
+            updateAttemptsDisplay();
+            resetFeedback();
+            hideHints();
+            updateProgress(0);
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('passwordInput').disabled = false;
+        }
+
+        function displayTargetName() {
+            document.getElementById('targetName').textContent = currentTarget.name;
+        }
+
+        function openProfile() {
+            document.getElementById('modalOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            loadSocialMediaProfile();
+        }
+
+        function closeProfile() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function loadSocialMediaProfile() {
+            // Load profile information
+            document.getElementById('smName').textContent = currentTarget.name;
+            document.getElementById('smUsername').textContent = currentTarget.username;
+            document.getElementById('smBio').textContent = currentTarget.bio;
+            document.getElementById('smPosts').textContent = currentTarget.posts.length;
+            document.getElementById('smFollowers').textContent = currentTarget.followers;
+            document.getElementById('smFollowing').textContent = currentTarget.following;
+
+            // Load profile picture
+            const avatarDiv = document.getElementById('smAvatar');
+            avatarDiv.innerHTML = `<img src="${currentTarget.profileImage}" alt="${currentTarget.name}">`;
+
+            const postsContainer = document.getElementById('smPostsContainer');
+            postsContainer.innerHTML = '';
+
+            currentTarget.posts.forEach((post, index) => {
+                const postDiv = document.createElement('div');
+                postDiv.className = 'sm-post';
+                postDiv.innerHTML = `
+                    <div class="sm-post-header">
+                        <div class="sm-post-avatar">👤</div>
+                        <div class="sm-post-info">
+                            <h4>${currentTarget.name}</h4>
+                            <div class="sm-post-time">${post.time}</div>
+                        </div>
+                    </div>
+                    <div class="sm-post-image">
+                        <img src="${post.image}" alt="Post ${index + 1}">
+                    </div>
+                    <div class="sm-post-caption">${post.caption}</div>
+                    <div class="sm-likes">❤️ ${post.likes} likes</div>
+                    <div class="sm-post-actions">
+                        <span class="sm-action">❤️ Like</span>
+                        <span class="sm-action">💬 Comment</span>
+                        <span class="sm-action">🔗 Share</span>
+                    </div>
+                `;
+                postsContainer.appendChild(postDiv);
+            });
+        }
+
+        function resetPasswordDisplay() {
+            const passwordBoxes = document.getElementById('passwordBoxes');
+            passwordBoxes.innerHTML = '';
+            for (let i = 0; i < 8; i++) {
+                const box = document.createElement('div');
+                box.className = 'password-box';
+                box.id = `box-${i}`;
+                passwordBoxes.appendChild(box);
+            }
+        }
+
+        function updateAttemptsDisplay() {
+            document.getElementById('attemptsLeft').textContent = attemptsLeft;
+        }
+
+        function resetFeedback() {
+            const feedback = document.getElementById('feedback');
+            feedback.className = 'feedback';
+            feedback.textContent = 'Click "VIEW SOCIAL MEDIA PROFILE" to investigate your target!';
+        }
+
+        function hideHints() {
+            document.getElementById('hints').style.display = 'none';
+        }
+
+        function showHints() {
+            const hints = document.getElementById('hints');
+            const hintsContent = document.getElementById('hintsContent');
+            let hintText = '';
+            const maxHints = 3 - attemptsLeft;
+            for (let i = 0; i < Math.min(maxHints, currentTarget.hints.length); i++) {
+                hintText += `• ${currentTarget.hints[i]}<br>`;
+            }
+            hintsContent.innerHTML = hintText;
+            hints.style.display = 'block';
+        }
+
+        function updateProgress(percentage) {
+            document.getElementById('progressFill').style.width = `${percentage}%`;
+        }
+
+        function checkPassword() {
+            if (gameWon || attemptsLeft === 0) return;
+            const guess = document.getElementById('passwordInput').value.toUpperCase().trim();
+            if (guess.length !== 8) {
+                showFeedback('Password must be exactly 8 characters!', 'error');
+                return;
+            }
+            attemptsLeft--;
+            updateAttemptsDisplay();
+            if (guess === currentTarget.password) {
+                gameWon = true;
+                showPasswordLetters(guess);
+                showFeedback('🎉 PASSWORD CRACKED! Excellent work! This shows how easily personal info can reveal passwords.', 'success');
+                updateProgress(100);
+                document.getElementById('passwordInput').disabled = true;
+            } else {
+                const analysis = analyzeGuess(guess, currentTarget.password);
+                showPasswordFeedback(guess, analysis);
+                
+                let feedbackText = `❌ Incorrect! `;
+                if (analysis.correctPositions > 0) {
+                    feedbackText += `${analysis.correctPositions} letters in correct positions. `;
+                }
+                if (analysis.correctLetters > analysis.correctPositions) {
+                    feedbackText += `${analysis.correctLetters - analysis.correctPositions} correct letters in wrong positions. `;
+                }
+                
+                if (attemptsLeft === 0) {
+                    feedbackText += `\n\n💀 LOCKED OUT! The password was: ${currentTarget.password}\n\nThis demonstrates how personal information from social media can be used to guess passwords!`;
+                    document.getElementById('passwordInput').disabled = true;
+                    showFeedback(feedbackText, 'error');
+                } else {
+                    showFeedback(feedbackText, 'error');
+                    showHints();
+                }
+                
+                updateProgress((3 - attemptsLeft) * 33.33);
+            }
+        }
+
+        function analyzeGuess(guess, correct) {
+            let correctPositions = 0;
+            let correctLetters = 0;
+            
+            for (let i = 0; i < 8; i++) {
+                if (guess[i] === correct[i]) {
+                    correctPositions++;
+                }
+            }
+            
+            const correctLetterCount = {};
+            for (let char of correct) {
+                correctLetterCount[char] = (correctLetterCount[char] || 0) + 1;
+            }
+            
+            for (let char of guess) {
+                if (correctLetterCount[char] > 0) {
+                    correctLetters++;
+                    correctLetterCount[char]--;
+                }
+            }
+            
+            return { correctPositions, correctLetters };
+        }
+
+        function showPasswordFeedback(guess, analysis) {
+            for (let i = 0; i < 8; i++) {
+                const box = document.getElementById(`box-${i}`);
+                const guessChar = guess[i];
+                const correctChar = currentTarget.password[i];
+                
+                box.textContent = guessChar;
+                
+                if (guessChar === correctChar) {
+                    box.style.backgroundColor = '#00aa00';
+                    box.style.color = '#ffffff';
+                } else if (currentTarget.password.includes(guessChar)) {
+                    box.style.backgroundColor = '#ccaa00';
+                    box.style.color = '#000000';
+                } else {
+                    box.style.backgroundColor = '#aa0000';
+                    box.style.color = '#ffffff';
+                }
+            }
+        }
+
+        function showPasswordLetters(password) {
+            for (let i = 0; i < 8; i++) {
+                const box = document.getElementById(`box-${i}`);
+                box.textContent = password[i];
+                box.style.backgroundColor = '#00aa00';
+                box.style.color = '#ffffff';
+            }
+        }
+
+        function showFeedback(message, type) {
+            const feedback = document.getElementById('feedback');
+            feedback.className = `feedback ${type}`;
+            feedback.innerHTML = message.replace(/\n/g, '<br>');
+        }
+
+        // Initialize game and attach event listeners when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Start the game
+            newTarget();
+            
+            // Button event listeners
+            document.getElementById('viewProfileBtn').addEventListener('click', openProfile);
+            document.getElementById('closeModalBtn').addEventListener('click', closeProfile);
+            document.getElementById('crackBtn').addEventListener('click', checkPassword);
+            document.getElementById('newTargetBtn').addEventListener('click', newTarget);
+            
+            // Modal overlay click (close when clicking outside)
+            document.getElementById('modalOverlay').addEventListener('click', function(e) {
+                if (e.target.id === 'modalOverlay') {
+                    closeProfile();
+                }
+            });
+            
+            // Prevent modal from closing when clicking inside
+            document.getElementById('socialMediaPage').addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            // Enter key to submit password
+            document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkPassword();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

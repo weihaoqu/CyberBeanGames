@@ -1,0 +1,2709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Malware Lab Escape</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --theme-color: #00ffff;
+            --theme-glow: rgba(0, 255, 255, 0.3);
+            --theme-glow-strong: rgba(0, 255, 255, 0.5);
+            --theme-glow-intense: rgba(0, 255, 255, 0.7);
+        }
+
+        body.master-agent {
+            --theme-color: #c084fc;
+            --theme-glow: rgba(192, 132, 252, 0.3);
+            --theme-glow-strong: rgba(192, 132, 252, 0.5);
+            --theme-glow-intense: rgba(192, 132, 252, 0.7);
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .game-container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 0 30px var(--theme-glow);
+        }
+        
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 10px;
+                border-radius: 8px;
+            }
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            border: 2px solid var(--theme-color);
+            position: relative;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--theme-color);
+            text-shadow: 0 0 10px var(--theme-color);
+        }
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 18px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title {
+                font-size: 16px;
+            }
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            font-size: 16px;
+            justify-content: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            border: 2px solid var(--theme-color);
+            flex-wrap: wrap;
+        }
+        
+        @media (max-width: 768px) {
+            .stats {
+                gap: 10px;
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats {
+                gap: 8px;
+                font-size: 12px;
+                padding: 6px;
+            }
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-label {
+            color: #aaa;
+            font-size: 12px;
+        }
+        
+        @media (max-width: 480px) {
+            .stat-label {
+                font-size: 10px;
+            }
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00ffff;
+        }
+        
+        @media (max-width: 768px) {
+            .stat-value {
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stat-value {
+                font-size: 14px;
+            }
+        }
+
+        .main-content {
+            display: flex;
+            gap: 20px;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        .grid-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 50px);
+            grid-template-rows: repeat(10, 50px);
+            gap: 2px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #444;
+            justify-content: center;
+        }
+        
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(10, 40px);
+                grid-template-rows: repeat(10, 40px);
+                gap: 1px;
+                padding: 8px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .grid {
+                grid-template-columns: repeat(10, 32px);
+                grid-template-rows: repeat(10, 32px);
+                gap: 1px;
+                padding: 5px;
+            }
+        }
+        
+        @media (max-width: 380px) {
+            .grid {
+                grid-template-columns: repeat(10, 28px);
+                grid-template-rows: repeat(10, 28px);
+            }
+        }
+
+        .node {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        @media (max-width: 768px) {
+            .node {
+                width: 40px;
+                height: 40px;
+                font-size: 9px;
+                border-radius: 3px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .node {
+                width: 32px;
+                height: 32px;
+                font-size: 8px;
+            }
+        }
+        
+        @media (max-width: 380px) {
+            .node {
+                width: 28px;
+                height: 28px;
+                font-size: 7px;
+            }
+        }
+
+        @media (hover: hover) {
+            .node:hover {
+                transform: scale(1.1);
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+                z-index: 10;
+            }
+        }
+        
+        .node:active {
+            transform: scale(0.95);
+            opacity: 0.8;
+        }
+
+        .node.clean {
+            background: linear-gradient(135deg, #4a9eff 0%, #2563eb 100%);
+            border-color: #1e40af;
+        }
+
+        .node.vulnerable {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            border-color: #d97706;
+            animation: pulse-yellow 2s infinite;
+        }
+
+        .node.infected {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border-color: #991b1b;
+            animation: pulse-red 1s infinite;
+        }
+
+        .node.protected {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-color: #047857;
+        }
+
+        .node.quarantined {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            border-color: #6d28d9;
+        }
+
+        .node.critical {
+            background: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
+            border: 3px solid #d8b4fe;
+            box-shadow: 0 0 15px rgba(216, 180, 254, 0.5);
+            animation: pulse-critical 2s infinite;
+        }
+
+        @keyframes pulse-critical {
+            0%, 100% { box-shadow: 0 0 15px rgba(216, 180, 254, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(216, 180, 254, 0.8); }
+        }
+
+        .node.selected {
+            box-shadow: 0 0 15px #fff;
+            border: 2px solid #fff;
+        }
+
+        .malware-icon {
+            font-size: 20px;
+            position: absolute;
+            animation: float 2s ease-in-out infinite;
+        }
+        
+        @media (max-width: 768px) {
+            .malware-icon {
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .malware-icon {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 380px) {
+            .malware-icon {
+                font-size: 12px;
+            }
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes pulse-yellow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes spread-animation {
+            0% { 
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .node.spreading {
+            animation: spread-animation 0.5s ease-out;
+        }
+
+        .sidebar {
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                flex-direction: column;
+            }
+        }
+
+        .action-panel {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #444;
+        }
+        
+        @media (max-width: 1024px) {
+            .action-panel {
+                flex: 1;
+                min-width: 280px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .action-panel {
+                width: 100%;
+                padding: 12px;
+            }
+        }
+
+        .panel-title {
+            font-size: 18px;
+            color: var(--theme-color);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .action-button {
+            width: 100%;
+            padding: 12px;
+            margin: 5px 0;
+            border: 2px solid var(--theme-color);
+            background: var(--theme-glow);
+            color: var(--theme-color);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        
+        @media (max-width: 768px) {
+            .action-button {
+                padding: 14px 12px;
+                font-size: 13px;
+                margin: 4px 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .action-button {
+                padding: 12px 10px;
+                font-size: 12px;
+            }
+        }
+
+        @media (hover: hover) {
+            .action-button:hover:not(:disabled) {
+                background: var(--theme-glow-strong);
+                box-shadow: 0 0 10px var(--theme-glow-strong);
+                transform: translateY(-2px);
+            }
+        }
+        
+        .action-button:active:not(:disabled) {
+            transform: scale(0.98);
+            background: var(--theme-glow-strong);
+        }
+
+        .action-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-color: #666;
+            color: #666;
+        }
+
+        .action-button.selected {
+            background: var(--theme-glow-strong);
+            box-shadow: 0 0 15px var(--theme-glow-intense);
+        }
+
+        .action-cost {
+            font-size: 12px;
+            color: #fbbf24;
+        }
+
+        .legend {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #444;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 12px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            margin-right: 10px;
+            border: 1px solid #333;
+        }
+
+        .info-panel {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #444;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .info-title {
+            color: #00ffff;
+            margin-bottom: 5px;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        @media (max-width: 480px) {
+            .control-buttons {
+                gap: 8px;
+                margin-top: 10px;
+            }
+        }
+
+        .control-button {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--theme-color);
+            background: var(--theme-glow);
+            color: var(--theme-color);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            white-space: nowrap;
+        }
+        
+        @media (max-width: 768px) {
+            .control-button {
+                padding: 12px 8px;
+                font-size: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .control-button {
+                padding: 10px 6px;
+                font-size: 11px;
+            }
+        }
+
+        @media (hover: hover) {
+            .control-button:hover {
+                background: var(--theme-glow-strong);
+                box-shadow: 0 0 10px var(--theme-glow-strong);
+            }
+        }
+        
+        .control-button:active {
+            transform: scale(0.98);
+            background: var(--theme-glow-strong);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            cursor: pointer;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 40px;
+            border-radius: 10px;
+            border: 3px solid var(--theme-color);
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 0 0 50px var(--theme-glow-strong);
+            max-height: 90vh;
+            overflow-y: auto;
+            cursor: default;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .modal-content {
+                padding: 30px 20px;
+                margin: 0 10px;
+                max-width: calc(100% - 20px);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .modal-content {
+                padding: 20px 15px;
+                border-radius: 8px;
+            }
+        }
+
+        .modal-title {
+            font-size: 36px;
+            color: var(--theme-color);
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px var(--theme-color);
+        }
+        
+        @media (max-width: 768px) {
+            .modal-title {
+                font-size: 28px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .modal-title {
+                font-size: 24px;
+            }
+        }
+
+        .modal-message {
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .modal-message {
+                font-size: 16px;
+                margin-bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .modal-message {
+                font-size: 14px;
+            }
+        }
+
+        .modal-button {
+            padding: 15px 30px;
+            margin: 0 10px;
+            border: 2px solid var(--theme-color);
+            background: var(--theme-glow-strong);
+            color: var(--theme-color);
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        
+        @media (max-width: 768px) {
+            .modal-button {
+                padding: 14px 24px;
+                margin: 5px;
+                font-size: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .modal-button {
+                padding: 12px 20px;
+                font-size: 14px;
+                margin: 4px;
+                display: block;
+                width: calc(100% - 8px);
+            }
+        }
+
+        @media (hover: hover) {
+            .modal-button:hover {
+                background: var(--theme-glow-intense);
+                box-shadow: 0 0 20px var(--theme-glow-intense);
+                transform: scale(1.05);
+            }
+        }
+        
+        .modal-button:active {
+            transform: scale(0.98);
+            background: var(--theme-glow-intense);
+        }
+
+        .difficulty-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        @media (max-width: 480px) {
+            .difficulty-selector {
+                gap: 10px;
+                margin: 15px 0;
+            }
+        }
+
+        .difficulty-button {
+            padding: 15px 25px;
+            border: 2px solid #444;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        
+        @media (max-width: 768px) {
+            .difficulty-button {
+                padding: 14px 20px;
+                font-size: 13px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .difficulty-button {
+                padding: 12px 16px;
+                font-size: 12px;
+                flex: 1;
+            }
+        }
+
+        @media (hover: hover) {
+            .difficulty-button:hover {
+                border-color: var(--theme-color);
+                color: var(--theme-color);
+                box-shadow: 0 0 10px var(--theme-glow-strong);
+            }
+        }
+        
+        .difficulty-button:active {
+            transform: scale(0.98);
+            border-color: var(--theme-color);
+            color: var(--theme-color);
+        }
+
+        .difficulty-button.easy { border-color: #10b981; color: #10b981; }
+        .difficulty-button.medium { border-color: #fbbf24; color: #fbbf24; }
+        .difficulty-button.hard { border-color: #ef4444; color: #ef4444; }
+
+        .scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        .scrollbar::-webkit-scrollbar-thumb {
+            background: var(--theme-color);
+            border-radius: 4px;
+        }
+
+        .scrollbar::-webkit-scrollbar-thumb:hover {
+            background: var(--theme-color);
+            opacity: 0.8;
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .achievement-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #444;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-card.unlocked {
+            border-color: #00ffff;
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+        
+        /* Lavender theme when Best Agent achievement is unlocked */
+        body.master-agent .action-button,
+        body.master-agent .control-buttons button,
+        body.master-agent .modal-button,
+        body.master-agent .difficulty-button {
+            border-color: #c084fc !important;
+        }
+        
+        body.master-agent .action-button:hover:not(:disabled),
+        body.master-agent .control-buttons button:hover,
+        body.master-agent .modal-button:hover,
+        body.master-agent .difficulty-button:hover {
+            border-color: #e9d5ff !important;
+            box-shadow: 0 0 15px rgba(192, 132, 252, 0.3) !important;
+        }
+        
+        body.master-agent .action-button.selected {
+            border-color: #e9d5ff !important;
+            box-shadow: 0 0 20px rgba(192, 132, 252, 0.5) !important;
+        }
+        
+        body.master-agent .stat-label,
+        body.master-agent .modal-title,
+        body.master-agent .title {
+            color: #c084fc !important;
+        }
+        
+        /* Override all cyan colors to lavender when master achievement is unlocked */
+        body.master-agent .game-container {
+            border-color: #c084fc !important;
+        }
+        
+        body.master-agent .title {
+            color: #c084fc !important;
+            text-shadow: 0 0 10px #c084fc !important;
+        }
+        
+        body.master-agent .stat-panel {
+            border-color: #c084fc !important;
+        }
+        
+        body.master-agent .stat-value {
+            color: #c084fc !important;
+        }
+        
+        body.master-agent .node.selected::before {
+            background: #c084fc !important;
+        }
+        
+        body.master-agent .modal-content {
+            border-color: #c084fc !important;
+        }
+        
+        body.master-agent .difficulty-button {
+            border-color: #c084fc !important;
+            color: #c084fc !important;
+        }
+        
+        body.master-agent .difficulty-button:hover {
+            border-color: #e9d5ff !important;
+        }
+        
+        body.master-agent .achievement-card.unlocked {
+            border-color: #c084fc !important;
+            box-shadow: 0 0 10px rgba(192, 132, 252, 0.3) !important;
+        }
+        
+        /* Override inline styles with !important */
+        body.master-agent h3[style*="#00ffff"],
+        body.master-agent h3 {
+            color: #c084fc !important;
+            border-bottom-color: #c084fc !important;
+        }
+        
+        body.master-agent strong[style*="#00ffff"] {
+            color: #c084fc !important;
+        }
+        
+        body.master-agent tr[style*="#00ffff"] {
+            color: #c084fc !important;
+        }
+        
+        body.master-agent td[style*="#00ffff"] {
+            color: #c084fc !important;
+        }
+        
+        /* Theme-aware section headers */
+        .section-header {
+            color: var(--theme-color);
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--theme-color);
+            padding-bottom: 5px;
+        }
+        
+        .theme-text {
+            color: var(--theme-color);
+        }
+
+        .achievement-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .achievement-icon {
+            font-size: 28px;
+            filter: grayscale(100%);
+            opacity: 0.5;
+        }
+
+        .achievement-card.unlocked .achievement-icon {
+            filter: grayscale(0%);
+            opacity: 1;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .achievement-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #888;
+        }
+
+        .achievement-card.unlocked .achievement-title {
+            color: #00ffff;
+        }
+
+        .achievement-desc {
+            font-size: 13px;
+            color: #aaa;
+            line-height: 1.5;
+        }
+
+        .achievement-reward {
+            font-size: 12px;
+            color: #fbbf24;
+            margin-top: 5px;
+        }
+
+        .achievement-card.unlocked .achievement-reward {
+            color: #00ffff;
+        }
+        
+        .how-to-play {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #444;
+            margin-bottom: 15px;
+        }
+        
+        .how-to-play-title {
+            font-size: 16px;
+            color: var(--theme-color);
+            margin-bottom: 12px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .how-to-play-content {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #ccc;
+        }
+        
+        .how-to-play-content ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        
+        .how-to-play-content li {
+            margin: 8px 0;
+        }
+        
+        .how-to-play-content strong {
+            color: var(--theme-color);
+        }
+        
+        .how-to-play-footer {
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #444;
+        }
+        
+        @media (max-width: 1024px) {
+            .how-to-play {
+                margin-bottom: 10px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .how-to-play {
+                padding: 12px;
+            }
+            
+            .how-to-play-content {
+                font-size: 12px;
+            }
+        }
+        
+        .modal-close {
+            position: sticky;
+            top: 15px;
+            float: right;
+            margin-bottom: -38px;
+            margin-right: -10px;
+            z-index: 10;
+            width: 38px;
+            height: 38px;
+            border: 2px solid var(--theme-color);
+            background: var(--theme-glow);
+            color: var(--theme-color);
+            font-size: 26px;
+            font-weight: bold;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            line-height: 1;
+            padding: 0;
+            box-shadow: 0 0 12px var(--theme-glow-strong);
+        }
+        
+        @media (hover: hover) {
+            .modal-close:hover {
+                background: var(--theme-glow-strong);
+                box-shadow: 0 0 20px var(--theme-glow-intense);
+                transform: rotate(90deg) scale(1.15);
+            }
+        }
+        
+        .modal-close:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 25px var(--theme-glow-intense);
+        }
+        
+        @media (max-width: 768px) {
+            .modal-close {
+                width: 34px;
+                height: 34px;
+                font-size: 22px;
+                top: 12px;
+                right: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="top-bar">
+            <div class="title">🦠 MALWARE LAB ESCAPE</div>
+        </div>
+
+        <div class="main-content">
+            <div class="how-to-play">
+                <div class="how-to-play-title">🕹️ How to Play — Quick Guide</div>
+                <div class="how-to-play-content">
+                    <p style="margin-bottom: 10px;"><strong>Objective:</strong><br>
+                    Eliminate all <strong style="color: #ef4444;">Red</strong> (infected) squares before malware controls more than half the board.<br>
+                    💗 If a <strong style="color: #c084fc;">Pink</strong> server is infected, the game ends instantly.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>Security Keys (SK):</strong><br>
+                    You have <strong style="color: #fbbf24;">5 SK per turn</strong> to perform actions. Unused SK do not carry over.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>Gameplay:</strong><br>
+                    Select an action, then click a square to use it.<br>
+                    Use <strong>Patch</strong> to block spread, <strong>Quarantine</strong> to trap enemies for 3 turns, and <strong>Delete</strong> to remove malware.</p>
+                    
+                    <p style="margin-bottom: 10px;"><strong>Power-Ups (Every 5 Turns):</strong><br>
+                    🔥 <strong>Firewall:</strong> Patches all Orange squares<br>
+                    🧪 <strong>Antivirus:</strong> Removes one random infected node</p>
+                    
+                    <p style="margin-bottom: 0;"><strong style="color: var(--theme-color);">Tip:</strong><br>
+                    Patch strategically, quarantine threats, and always protect your servers!</p>
+                </div>
+                <div class="how-to-play-footer">
+                    For more info, press <strong>I</strong> or click the <strong>Info</strong> button
+                </div>
+            </div>
+            
+            <div class="grid-container">
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-label">TURN</span>
+                        <span class="stat-value" id="turnCount">1</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">TIME</span>
+                        <span class="stat-value" id="gameTimer">0:00</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">SCORE</span>
+                        <span class="stat-value" id="score">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">MAX SCORE</span>
+                        <span class="stat-value" id="maxScore">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">INFECTED</span>
+                        <span class="stat-value" id="infectedCount">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">SECURITY KEYS</span>
+                        <span class="stat-value" id="actionsLeft">3</span>
+                    </div>
+                </div>
+                <div class="grid" id="gameGrid"></div>
+                <div class="control-buttons">
+                    <button class="control-button" onclick="endTurn()">End Turn (E)</button>
+                    <button class="control-button" onclick="restartGame()">Restart (R)</button>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="control-buttons" style="margin-bottom: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <button class="control-button" onclick="showInfoModal()">Info (I)</button>
+                    <button class="control-button" onclick="showAchievementsModal()">Achievements (A)</button>
+                    <button class="control-button" onclick="showDetailedGuideModal()" style="grid-column: 1 / -1;">How to Play Detailed (T)</button>
+                    <button class="control-button" onclick="showScoreHistoryModal()" style="grid-column: 1 / -1;">Score History (H)</button>
+                </div>
+                
+                <div class="action-panel">
+                    <div class="panel-title">ACTIONS</div>
+                    <button class="action-button" id="patchBtn" onclick="selectAction('patch')">
+                        <span>🔧 PATCH [1]</span>
+                        <span class="action-cost">1 SK</span>
+                    </button>
+                    <button class="action-button" id="quarantineBtn" onclick="selectAction('quarantine')">
+                        <span>🛡️ QUARANTINE [2]</span>
+                        <span class="action-cost">2 SK</span>
+                    </button>
+                    <button class="action-button" id="deleteBtn" onclick="selectAction('delete')">
+                        <span>🗑️ DELETE [3]</span>
+                        <span class="action-cost">3 SK</span>
+                    </button>
+                </div>
+
+                <div class="action-panel">
+                    <div class="panel-title">POWER-UPS</div>
+                    <button class="action-button" id="firewallBtn" onclick="usePowerUp('firewall')" disabled>
+                        <span>🔥 FIREWALL</span>
+                        <span class="action-cost" id="firewallCount">0</span>
+                    </button>
+                    <button class="action-button" id="antivirusBtn" onclick="usePowerUp('antivirus')" disabled>
+                        <span>💉 ANTIVIRUS</span>
+                        <span class="action-cost" id="antivirusCount">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div class="modal" id="gameOverModal">
+        <div class="modal-content">
+            <div class="modal-title" id="modalTitle">GAME OVER</div>
+            <div class="modal-message" id="modalMessage"></div>
+            <button class="modal-button" onclick="restartGame()">Play Again</button>
+        </div>
+    </div>
+
+    <!-- Start Game Modal -->
+    <div class="modal show" id="startModal">
+        <div class="modal-content">
+            <div class="modal-title">🦠 MALWARE LAB ESCAPE</div>
+            <div class="modal-message">
+                Select your difficulty and contain the malware outbreak!
+            </div>
+            <div class="difficulty-selector">
+                <button class="difficulty-button easy" onclick="startGame('easy')">EASY</button>
+                <button class="difficulty-button medium" onclick="startGame('medium')">MEDIUM</button>
+                <button class="difficulty-button hard" onclick="startGame('hard')">HARD</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div class="modal" id="infoModal" onclick="closeInfoModal()">
+        <div class="modal-content" style="max-width: 700px; max-height: 80vh; overflow-y: auto; text-align: left; cursor: default;" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeInfoModal()">×</button>
+            <div class="modal-title" style="text-align: center;">📖 GAME INFO & RULES</div>
+            
+            <div style="margin-bottom: 25px;">
+                <h3 class="section-header">🎯 GAME OBJECTIVE</h3>
+                <p style="line-height: 1.6; font-size: 14px;">
+                    Eliminate all malware from the 10x10 grid before it spreads beyond control (40% infection) or compromises a critical server.
+                </p>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <h3 class="section-header">📋 GAME RULES</h3>
+                <ul style="line-height: 1.8; font-size: 14px; padding-left: 20px;">
+                    <li><strong>Security Keys Per Turn:</strong> You have 5 security keys (SK) each turn to defend the network</li>
+                    <li><strong>Turn System:</strong> After spending your actions, end your turn - malware will spread</li>
+                    <li><strong>Win Condition:</strong> Eliminate ALL malware from the grid</li>
+                    <li><strong>Lose Conditions:</strong>
+                        <ul style="margin-top: 5px;">
+                            <li>Infection spreads to 40% or more of the grid</li>
+                            <li>Any Critical Server (🖥️) becomes infected</li>
+                        </ul>
+                    </li>
+                    <li><strong>Power-ups:</strong> Earned every 5 turns automatically</li>
+                </ul>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <h3 class="section-header">🛠️ ACTIONS (Hotkeys 1-3)</h3>
+                <div style="font-size: 13px; line-height: 1.8;">
+                    <p><strong style="color: #fbbf24;">🔧 PATCH [1] - 1 SK</strong><br>
+                    Protects clean or vulnerable nodes from infection. Creates a defensive barrier. Cannot patch critical servers (lavender).</p>
+                    
+                    <p><strong style="color: #fbbf24;">🛡️ QUARANTINE [2] - 2 SK</strong><br>
+                    Isolates an infected node for 3 turns, preventing malware from spreading. Expires after 3 turns and becomes infected again.</p>
+                    
+                    <p><strong style="color: #fbbf24;">🗑️ DELETE [3] - 3 SK</strong><br>
+                    Permanently removes malware from an infected or quarantined node. Most expensive action.</p>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <h3 class="section-header">⚡ POWER-UPS</h3>
+                <div style="font-size: 13px; line-height: 1.8;">
+                    <p><strong style="color: #fbbf24;">🔥 FIREWALL</strong><br>
+                    Instantly protects ALL vulnerable nodes on the grid. Great for defensive plays.</p>
+                    
+                    <p><strong style="color: #fbbf24;">💉 ANTIVIRUS</strong><br>
+                    Randomly eliminates one infected node. Free malware deletion.</p>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <h3 class="section-header">🦠 MALWARE TYPES</h3>
+                <div style="font-size: 13px; line-height: 1.8;">
+                    <p><strong style="color: #ef4444;">🪱 WORM</strong> - Spread Rate: 100%<br>
+                    Spreads to all 4 adjacent nodes every turn. Fast and aggressive. Always visible.</p>
+                    
+                    <p><strong style="color: #ef4444;">🐴 TROJAN</strong> - Spread Rate: 50%<br>
+                    Hidden malware (shows as "?"). Spreads to 4 adjacent nodes. Must be scanned to identify.</p>
+                    
+                    <p><strong style="color: #ef4444;">🔒 RANSOMWARE</strong> - Spread Rate: 30%<br>
+                    Slow but persistent. Spreads to 4 adjacent nodes. Always visible.</p>
+                    
+                    <p><strong style="color: #ef4444;">🤖 BOTNET</strong> - Spread Rate: 25%<br>
+                    Spreads in ALL 8 directions (including diagonals). Lower chance per node but wider reach.</p>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <h3 class="section-header">🎨 NODE STATES</h3>
+                <div style="font-size: 13px; line-height: 1.8;">
+                    <p><strong style="color: #4a9eff;">🔵 CLEAN</strong> - Healthy node, can be infected</p>
+                    <p><strong style="color: #fbbf24;">🟡 VULNERABLE</strong> - Higher risk of infection, patch immediately</p>
+                    <p><strong style="color: #ef4444;">🔴 INFECTED</strong> - Contains malware, spreads each turn</p>
+                    <p><strong style="color: #10b981;">🟢 PROTECTED</strong> - Patched node, immune to infection</p>
+                    <p><strong style="color: #8b5cf6;">🟣 QUARANTINED</strong> - Isolated for 3 turns, cannot spread</p>
+                    <p><strong class="theme-text">🞣 CRITICAL SERVER</strong> - Mission-critical node with lavender background. CANNOT be patched! If infected = instant game over!</p>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <h3 class="section-header">⚠️ THREAT INDICATORS</h3>
+                <p style="line-height: 1.6; font-size: 14px;">
+                    Red numbered badges show how many infected nodes are adjacent (1-8). Use these to prioritize patching vulnerable areas.
+                </p>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <h3 class="section-header">🏆 ACHIEVEMENTS</h3>
+                <div style="font-size: 13px; line-height: 1.8;">
+                    <p><strong>⚡ SPEED RUN</strong> - Finish EASY under 15 seconds (+50 pts)</p>
+                    <p><strong>⚡⚡ PRO SPEED RUN</strong> - Finish MEDIUM under 30 seconds (+75 pts)</p>
+                    <p><strong>🏆 GOLDY SPEED RUN</strong> - Finish HARD under 45 seconds (+100 pts)</p>
+                    <p><strong>🔥 ULTIMATE SPEED RUNNER</strong> - Finish HARD under 30 seconds (+150 pts)</p>
+                    <p><strong>🛡️ DEFENSIVE MASTER</strong> - Win without using Delete (+50 pts)</p>
+                    <p><strong>🖥️ PERFECT DEFENSE</strong> - Win with no critical servers infected (+50 pts)</p>
+                    <p><strong>⏱️ SURVIVOR</strong> - Survive 20+ turns (+50 pts)</p>
+                    <p><strong>⏱️⏱️ SUPER SURVIVOR</strong> - Survive 50+ turns (+100 pts)</p>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <h3 class="section-header">⌨️ HOTKEYS</h3>
+                <div style="font-size: 13px; line-height: 1.8; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <p><strong>1</strong> - Patch</p>
+                    <p><strong>E</strong> - End Turn</p>
+                    <p><strong>2</strong> - Quarantine</p>
+                    <p><strong>R</strong> - Restart</p>
+                    <p><strong>3</strong> - Delete</p>
+                    <p><strong>I</strong> - Info</p>
+                    <p><strong>A</strong> - Achievements</p>
+                    <p><strong>T</strong> - How to Play</p>
+                    <p><strong>H</strong> - Score History</p>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <h3 class="section-header">💡 STRATEGY TIPS</h3>
+                <ul style="line-height: 1.8; font-size: 14px; padding-left: 20px;">
+                    <li>Protect critical servers first - losing one means instant defeat</li>
+                    <li>Use threat indicators to identify high-risk areas</li>
+                    <li>Quarantine is cheaper than Delete and buys you time</li>
+                    <li>Patch vulnerable nodes around infections to create barriers</li>
+                    <li>Delete center infections that can spread in multiple directions</li>
+                    <li>Save power-ups for emergency situations</li>
+                    <li>Watch for 10% mutation chance each turn</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Score History Modal -->
+    <div class="modal" id="scoreHistoryModal" onclick="closeScoreHistoryModal()">
+        <div class="modal-content" style="max-width: 700px; max-height: 80vh; overflow-y: auto; text-align: left; cursor: default;" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeScoreHistoryModal()">×</button>
+            <div class="modal-title" style="text-align: center;">📊 SCORE HISTORY</div>
+            
+            <div style="margin-bottom: 25px;">
+                <div id="scoreHistoryContainer" style="font-size: 13px; line-height: 1.8;">
+                    <p style="color: #aaa;">No games played yet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Compromised Modal -->
+    <div class="modal" id="compromisedModal">
+        <div class="modal-content" style="max-width: 500px; background: linear-gradient(135deg, #3d0000 0%, #1a0000 100%); border-color: #ef4444;">
+            <div class="modal-title" style="color: #ef4444; animation: pulse 1s ease-in-out infinite;">⚠️ SYSTEM COMPROMISED ⚠️</div>
+            <div class="modal-message" style="font-size: 16px; margin-bottom: 20px; color: #ff6b6b;">
+                Your terminal has been breached!<br>
+                <span style="font-size: 14px; color: #aaa;">Click the button <span id="clicksRemaining" style="color: #ef4444; font-weight: bold;">5</span> times to regain access</span>
+            </div>
+            <button class="modal-button" id="compromisedBtn" onclick="handleCompromisedClick()" style="background: rgba(239, 68, 68, 0.3); border-color: #ef4444; color: #ef4444; font-size: 18px; padding: 20px 40px;">RESTORE ACCESS</button>
+        </div>
+    </div>
+
+    <!-- Achievements Modal -->
+    <div class="modal" id="achievementsModal" onclick="closeAchievementsModal()">
+        <div class="modal-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto; text-align: left; cursor: default;" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeAchievementsModal()">×</button>
+            <div class="modal-title" style="text-align: center;">🏆 ACHIEVEMENTS</div>
+            
+            <div class="achievement-grid">
+                <div class="achievement-card" id="achievement-speedRun">
+                    <div class="achievement-header">
+                        <div class="achievement-icon">⚡</div>
+                        <div>
+                            <div class="achievement-title">SPEED RUN</div>
+                        </div>
+                    </div>
+                    <div class="achievement-desc">Finish EASY under 15 seconds</div>
+                    <div class="achievement-reward">+50 points</div>
+                </div>
+
+                <div class="achievement-card" id="achievement-proSpeedRun">
+                    <div class="achievement-header">
+                        <div class="achievement-icon">⚡⚡</div>
+                        <div>
+                            <div class="achievement-title">PRO SPEED RUN</div>
+                        </div>
+                    </div>
+                    <div class="achievement-desc">Finish MEDIUM under 30 seconds</div>
+                    <div class="achievement-reward">+75 points</div>
+                </div>
+
+                <div class="achievement-card" id="achievement-goldySpeedRun">
+                    <div class="achievement-header">
+                        <div class="achievement-icon">🏆</div>
+                        <div>
+                            <div class="achievement-title">GOLDY SPEED RUN</div>
+                        </div>
+                    </div>
+                    <div class="achievement-desc">Finish HARD under 45 seconds</div>
+                    <div class="achievement-reward">+100 points</div>
+                </div>
+
+                <div class="achievement-card" id="achievement-godlySpeedRun">
+                    <div class="achievement-header">
+                        <div class="achievement-icon">🔥</div>
+                        <div>
+                            <div class="achievement-title">ULTIMATE SPEED RUNNER</div>
+                        </div>
+                    </div>
+                    <div class="achievement-desc">Finish HARD under 30 seconds</div>
+                    <div class="achievement-reward">+150 points</div>
+                </div>
+
+                <div class="achievement-card" id="achievement-noDelete">
+                    <div class="achievement-header">
+                        <div class="achievement-icon">🛡️</div>
+                        <div>
+                            <div class="achievement-title">DEFENSIVE MASTER</div>
+                        </div>
+                    </div>
+                    <div class="achievement-desc">Win the game without using the Delete action</div>
+                    <div class="achievement-reward">+50 points</div>
+                </div>
+
+                <div class="achievement-card" id="achievement-perfectDefense">
+                    <div class="achievement-header">
+                        <div class="achievement-icon">🖥️</div>
+                        <div>
+                            <div class="achievement-title">PERFECT DEFENSE</div>
+                        </div>
+                    </div>
+                    <div class="achievement-desc">Win without any critical servers getting infected</div>
+                    <div class="achievement-reward">+50 points</div>
+                </div>
+
+                <div class="achievement-card" id="achievement-survivor">
+                    <div class="achievement-header">
+                        <div class="achievement-icon">⏱️</div>
+                        <div>
+                            <div class="achievement-title">SURVIVOR</div>
+                        </div>
+                    </div>
+                    <div class="achievement-desc">Survive for 20 or more turns</div>
+                    <div class="achievement-reward">+50 points</div>
+                </div>
+
+                <div class="achievement-card" id="achievement-superSurvivor">
+                    <div class="achievement-header">
+                        <div class="achievement-icon">⏱️⏱️</div>
+                        <div>
+                            <div class="achievement-title">SUPER SURVIVOR</div>
+                        </div>
+                    </div>
+                    <div class="achievement-desc">Survive for 50 or more turns</div>
+                    <div class="achievement-reward">+100 points</div>
+                </div>
+
+                <div class="achievement-card" id="achievement-bestAgent">
+                    <div class="achievement-header">
+                        <div class="achievement-icon">👑</div>
+                        <div>
+                            <div class="achievement-title">BEST SECURITY AGENT</div>
+                        </div>
+                    </div>
+                    <div class="achievement-desc">Unlock all 9 other achievements</div>
+                    <div class="achievement-reward">+200 points • Master Achievement</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed How to Play Modal -->
+    <div class="modal" id="detailedGuideModal" onclick="closeDetailedGuideModal()">
+        <div class="modal-content" style="max-width: 700px; max-height: 80vh; overflow-y: auto; text-align: left; cursor: default;" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeDetailedGuideModal()">×</button>
+            <div class="modal-title" style="text-align: center;">📖 How to Play</div>
+            
+            <div style="margin-bottom: 25px;">
+                <h3 class="section-header">🎯 Objective</h3>
+                <p style="line-height: 1.6; font-size: 14px;">
+                    Your goal is to eliminate all <strong style="color: #ef4444;">Red</strong> (infected) spaces before the malware spreads and takes over more than half of the board.<br>
+                    ⚠️ If a <strong style="color: #c084fc;">Pink</strong> square (your server) becomes infected, the game ends immediately.
+                </p>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <h3 class="section-header">🔐 Security Keys (SK)</h3>
+                <ul style="line-height: 1.8; font-size: 14px; padding-left: 20px;">
+                    <li>Security Keys (SK) are used to perform actions.</li>
+                    <li>You start each turn with <strong style="color: #fbbf24;">5 SK</strong>.</li>
+                    <li>SK does not stack — unused keys are lost at the end of the turn.</li>
+                    <li>Your current SK count is displayed at the top center of the screen.</li>
+                </ul>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <h3 class="section-header">🖥️ Game Interface</h3>
+                <ul style="line-height: 1.8; font-size: 14px; padding-left: 20px;">
+                    <li><strong>Right Panel:</strong> Available actions you can use to fight malware.</li>
+                    <li><strong>Top Panel:</strong>
+                        <ul style="margin-top: 5px;">
+                            <li>Time spent on the level</li>
+                            <li>Current score</li>
+                            <li>Highest score achieved</li>
+                            <li>Current turn number</li>
+                            <li>Security Keys (SK)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Bottom Left:</strong> Power-ups (earned every 5 turns).</li>
+                </ul>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <h3 class="section-header">▶️ How to Take a Turn</h3>
+                <ol style="line-height: 1.8; font-size: 14px; padding-left: 20px;">
+                    <li>Select an action from the right-side menu.</li>
+                    <li>Click a square on the board to use that action.</li>
+                    <li>End your turn once you've spent your SK or finished your moves.</li>
+                </ol>
+                <p style="line-height: 1.6; font-size: 14px; margin-top: 10px;">
+                    🔴 <strong style="color: #ef4444;">Red squares</strong> represent malware and are dangerous.<br>
+                    💗 <strong style="color: #c084fc;">Pink squares</strong> are your servers—protect them at all costs.
+                </p>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <h3 class="section-header">🛠️ Actions</h3>
+                <div style="font-size: 13px; line-height: 1.8;">
+                    <p><strong style="color: #fbbf24;">Patch</strong><br>
+                    Blocks malware movement and prevents reinfection.</p>
+                    
+                    <p><strong style="color: #fbbf24;">Quarantine</strong><br>
+                    Traps malware in a Purple square for 3 turns, buying time to delete it safely.</p>
+                    
+                    <p><strong style="color: #fbbf24;">Delete</strong><br>
+                    Removes an infected (Red) square.<br>
+                    ⚠️ Malware can return if the area is not patched.</p>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <h3 class="section-header">🚀 Power-Ups (Earned Every 5 Turns)</h3>
+                <div style="font-size: 13px; line-height: 1.8;">
+                    <p><strong style="color: #fbbf24;">🔥 Firewall</strong><br>
+                    Converts all Orange squares into Green (Patched) squares.</p>
+                    
+                    <p><strong style="color: #fbbf24;">💉 Antivirus</strong><br>
+                    Automatically removes one random infected node.</p>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <h3 class="section-header">🧠 Strategy Tips</h3>
+                <ul style="line-height: 1.8; font-size: 14px; padding-left: 20px;">
+                    <li>Use <strong>Patch</strong> to protect your servers and limit malware movement.</li>
+                    <li><strong>Quarantine</strong> enemies to control the board before deleting them.</li>
+                    <li>Don't just delete—secure the area, or malware may spread back.</li>
+                    <li>Use threat indicators to prioritize which areas need immediate attention.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        const GRID_SIZE = 10;
+        let gameState = {
+            grid: [],
+            turn: 1,
+            score: 0,
+            actionsPerTurn: 3,
+            actionsLeft: 3,
+            selectedAction: null,
+            selectedNode: null,
+            difficulty: 'medium',
+            gameOver: false,
+            actionHistory: [], // For undo functionality
+            undoUsedThisTurn: false, // Track if undo was used this turn
+            startTime: null,
+            elapsedTime: 0,
+            timerInterval: null,
+            compromisedCheckInterval: null,
+            isCompromised: false,
+            compromisedClicksRemaining: 5,
+            powerUps: {
+                firewall: 0,
+                antivirus: 0
+            },
+            achievements: loadAchievements(),
+            stats: {
+                deletesUsed: 0,
+                criticalInfected: false,
+                maxTurn: 0
+            }
+        };
+        
+        // Load high score and score history from localStorage
+        function loadHighScore() {
+            const saved = localStorage.getItem('malwareLabHighScore');
+            return saved ? parseInt(saved) : 0;
+        }
+        
+        function saveHighScore(score) {
+            const currentHigh = loadHighScore();
+            if (score > currentHigh) {
+                localStorage.setItem('malwareLabHighScore', score.toString());
+                return true;
+            }
+            return false;
+        }
+        
+        function loadScoreHistory() {
+            const saved = localStorage.getItem('malwareLabScoreHistory');
+            return saved ? JSON.parse(saved) : [];
+        }
+        
+        function loadAchievements() {
+            const saved = localStorage.getItem('malwareLabAchievements');
+            if (saved) {
+                return JSON.parse(saved);
+            }
+            return {
+                speedRun: false,
+                proSpeedRun: false,
+                goldySpeedRun: false,
+                godlySpeedRun: false,
+                noDelete: false,
+                perfectDefense: false,
+                survivor: false,
+                superSurvivor: false,
+                bestAgent: false
+            };
+        }
+        
+        function saveAchievements() {
+            localStorage.setItem('malwareLabAchievements', JSON.stringify(gameState.achievements));
+        }
+        
+        function saveToScoreHistory(score, difficulty, turns, won, time) {
+            // Only save wins to score history
+            if (!won) return;
+            
+            const history = loadScoreHistory();
+            history.unshift({
+                score,
+                difficulty,
+                turns,
+                won,
+                time,
+                date: new Date().toLocaleDateString()
+            });
+            // Keep only last 10 games
+            if (history.length > 10) history.pop();
+            localStorage.setItem('malwareLabScoreHistory', JSON.stringify(history));
+        }
+        
+        // Simple sound effects using Web Audio API
+        const sounds = {
+            click: () => playTone(800, 0.1, 0.05),
+            success: () => playTone(1200, 0.15, 0.1),
+            error: () => playTone(300, 0.2, 0.1),
+            powerup: () => { playTone(600, 0.1, 0.05); setTimeout(() => playTone(900, 0.1, 0.05), 50); },
+            spread: () => playTone(400, 0.15, 0.08),
+            win: () => { 
+                playTone(523, 0.1, 0.1); 
+                setTimeout(() => playTone(659, 0.1, 0.1), 100);
+                setTimeout(() => playTone(784, 0.2, 0.15), 200);
+            },
+            lose: () => { 
+                playTone(400, 0.15, 0.1); 
+                setTimeout(() => playTone(300, 0.2, 0.15), 150);
+            }
+        };
+        
+        let audioContext;
+        function playTone(freq, duration, volume = 0.1) {
+            try {
+                if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = freq;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration);
+            } catch (e) {
+                // Silently fail if audio not supported
+            }
+        }
+        
+        // Timer functions
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function startTimer() {
+            gameState.startTime = Date.now();
+            gameState.elapsedTime = 0;
+            if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+            gameState.timerInterval = setInterval(() => {
+                if (!gameState.gameOver && !gameState.isCompromised) {
+                    gameState.elapsedTime = Math.floor((Date.now() - gameState.startTime) / 1000);
+                    document.getElementById('gameTimer').textContent = formatTime(gameState.elapsedTime);
+                }
+            }, 1000);
+            
+            // Start compromised check interval (every 30 seconds, 0.01% chance)
+            if (gameState.compromisedCheckInterval) clearInterval(gameState.compromisedCheckInterval);
+            gameState.compromisedCheckInterval = setInterval(() => {
+                if (!gameState.gameOver && !gameState.isCompromised && Math.random() < 0.0001) {
+                    triggerCompromised();
+                }
+            }, 30000);
+        }
+        
+        function stopTimer() {
+            if (gameState.timerInterval) {
+                clearInterval(gameState.timerInterval);
+                gameState.timerInterval = null;
+            }
+            if (gameState.compromisedCheckInterval) {
+                clearInterval(gameState.compromisedCheckInterval);
+                gameState.compromisedCheckInterval = null;
+            }
+        }
+        
+        // Keyboard controls
+        document.addEventListener('keydown', function(event) {
+            const key = event.key.toLowerCase();
+            
+            // X key to close any open modal (works anytime)
+            if (key === 'x' || key === 'escape') {
+                if (document.getElementById('infoModal').classList.contains('show')) {
+                    closeInfoModal();
+                    return;
+                }
+                else if (document.getElementById('achievementsModal').classList.contains('show')) {
+                    closeAchievementsModal();
+                    return;
+                }
+                else if (document.getElementById('scoreHistoryModal').classList.contains('show')) {
+                    closeScoreHistoryModal();
+                    return;
+                }
+                else if (document.getElementById('detailedGuideModal').classList.contains('show')) {
+                    closeDetailedGuideModal();
+                    return;
+                }
+            }
+            
+            // Don't process game controls if game is over (except r and a)
+            if (gameState.gameOver && key !== 'r' && key !== 'a' && key !== 'i' && key !== 'h' && key !== 't') return;
+            
+            // Action hotkeys (1-3)
+            if (key === '1') selectAction('patch');
+            else if (key === '2') selectAction('quarantine');
+            else if (key === '3') selectAction('delete');
+            // Control hotkeys
+            else if (key === 'e') endTurn();
+            else if (key === 'r') restartGame();
+            else if (key === 'i') showInfoModal();
+            else if (key === 'a') showAchievementsModal();
+            else if (key === 'h') showScoreHistoryModal();
+            else if (key === 't') showDetailedGuideModal();
+            // Undo disabled
+        });
+        
+        // Info modal functions
+        function showInfoModal() {
+            document.getElementById('infoModal').classList.add('show');
+            sounds.click();
+        }
+        
+        function updateScoreHistoryDisplay() {
+            const history = loadScoreHistory();
+            const container = document.getElementById('scoreHistoryContainer');
+            
+            // Use lavender if master achievement is unlocked
+            const themeColor = gameState.achievements.bestAgent ? '#c084fc' : '#00ffff';
+            
+            if (history.length === 0) {
+                container.innerHTML = '<p style="color: #aaa;">No games played yet</p>';
+                return;
+            }
+            
+            let html = '<table style="width: 100%; border-collapse: collapse;">';
+            html += `<tr style="border-bottom: 1px solid #444; color: ${themeColor};">`;
+            html += '<th style="padding: 8px; text-align: left;">Date</th>';
+            html += '<th style="padding: 8px; text-align: center;">Score</th>';
+            html += '<th style="padding: 8px; text-align: center;">Time</th>';
+            html += '<th style="padding: 8px; text-align: center;">Turns</th>';
+            html += '<th style="padding: 8px; text-align: center;">Difficulty</th>';
+            html += '<th style="padding: 8px; text-align: center;">Result</th>';
+            html += '</tr>';
+            
+            history.forEach(game => {
+                const resultColor = game.won ? '#10b981' : '#ef4444';
+                const resultText = game.won ? '✓ Win' : '✗ Loss';
+                const diffColor = game.difficulty === 'easy' ? '#10b981' : 
+                                 game.difficulty === 'medium' ? '#fbbf24' : '#ef4444';
+                const timeDisplay = game.time || '0:00';
+                
+                html += '<tr style="border-bottom: 1px solid #333;">';
+                html += `<td style="padding: 8px; color: #aaa;">${game.date}</td>`;
+                html += `<td style="padding: 8px; text-align: center; color: ${themeColor}; font-weight: bold;">${game.score}</td>`;
+                html += `<td style="padding: 8px; text-align: center; color: #fbbf24; font-weight: bold;">${timeDisplay}</td>`;
+                html += `<td style="padding: 8px; text-align: center; color: #aaa;">${game.turns}</td>`;
+                html += `<td style="padding: 8px; text-align: center; color: ${diffColor}; text-transform: uppercase;">${game.difficulty}</td>`;
+                html += `<td style="padding: 8px; text-align: center; color: ${resultColor}; font-weight: bold;">${resultText}</td>`;
+                html += '</tr>';
+            });
+            
+            html += '</table>';
+            container.innerHTML = html;
+        }
+        
+        function closeInfoModal() {
+            document.getElementById('infoModal').classList.remove('show');
+            sounds.click();
+        }
+
+        // Score History modal functions
+        function showScoreHistoryModal() {
+            updateScoreHistoryDisplay();
+            document.getElementById('scoreHistoryModal').classList.add('show');
+            sounds.click();
+        }
+        
+        function closeScoreHistoryModal() {
+            document.getElementById('scoreHistoryModal').classList.remove('show');
+            sounds.click();
+        }
+
+        // Detailed Guide modal functions
+        function showDetailedGuideModal() {
+            document.getElementById('detailedGuideModal').classList.add('show');
+            sounds.click();
+        }
+        
+        function closeDetailedGuideModal() {
+            document.getElementById('detailedGuideModal').classList.remove('show');
+            sounds.click();
+        }
+
+        // Achievements modal functions
+        function showAchievementsModal() {
+            updateAchievementsDisplay();
+            document.getElementById('achievementsModal').classList.add('show');
+            sounds.click();
+        }
+        
+        function closeAchievementsModal() {
+            document.getElementById('achievementsModal').classList.remove('show');
+            sounds.click();
+        }
+
+        function updateAchievementsDisplay() {
+            const achievements = ['speedRun', 'proSpeedRun', 'goldySpeedRun', 'godlySpeedRun', 'noDelete', 'perfectDefense', 'survivor', 'superSurvivor', 'bestAgent'];
+            achievements.forEach(achievement => {
+                const card = document.getElementById(`achievement-${achievement}`);
+                if (gameState.achievements[achievement]) {
+                    card.classList.add('unlocked');
+                } else {
+                    card.classList.remove('unlocked');
+                }
+            });
+            
+            // Apply lavender theme if Best Agent achievement is unlocked
+            if (gameState.achievements.bestAgent) {
+                document.body.classList.add('master-agent');
+            } else {
+                document.body.classList.remove('master-agent');
+            }
+        }
+        
+
+
+        // Compromised event functions
+        function triggerCompromised() {
+            gameState.isCompromised = true;
+            gameState.compromisedClicksRemaining = 5;
+            document.getElementById('clicksRemaining').textContent = '5';
+            document.getElementById('compromisedModal').classList.add('show');
+            sounds.error();
+        }
+        
+        function handleCompromisedClick() {
+            gameState.compromisedClicksRemaining--;
+            document.getElementById('clicksRemaining').textContent = gameState.compromisedClicksRemaining;
+            
+            if (gameState.compromisedClicksRemaining <= 0) {
+                gameState.isCompromised = false;
+                document.getElementById('compromisedModal').classList.remove('show');
+                sounds.success();
+                addEvent('System access restored!', 'success');
+            } else {
+                sounds.click();
+            }
+        }
+
+        // Malware types
+        const MALWARE_TYPES = {
+            WORM: { name: 'Worm', icon: '🪱', spreadRate: 1, visible: true },
+            TROJAN: { name: 'Trojan', icon: '🐴', spreadRate: 0.5, visible: false },
+            RANSOMWARE: { name: 'Ransomware', icon: '🔒', spreadRate: 0.3, visible: true },
+            BOTNET: { name: 'Botnet', icon: '🤖', spreadRate: 0.25, visible: true }
+        };
+
+        // Node states
+        const NODE_STATE = {
+            CLEAN: 'clean',
+            VULNERABLE: 'vulnerable',
+            INFECTED: 'infected',
+            PROTECTED: 'protected',
+            QUARANTINED: 'quarantined',
+            CRITICAL: 'critical'
+        };
+
+        // Initialize game
+        function startGame(difficulty) {
+            gameState.difficulty = difficulty;
+            gameState.gameOver = false;
+            
+            // Set difficulty parameters
+            const difficultySettings = {
+                easy: { initialInfected: 2, vulnerableChance: 0.15, actionsPerTurn: 5 },
+                medium: { initialInfected: 3, vulnerableChance: 0.25, actionsPerTurn: 5 },
+                hard: { initialInfected: 4, vulnerableChance: 0.35, actionsPerTurn: 5 }
+            };
+            
+            const settings = difficultySettings[difficulty];
+            gameState.actionsPerTurn = settings.actionsPerTurn;
+            gameState.actionsLeft = settings.actionsPerTurn;
+            
+            // Initialize grid
+            gameState.grid = [];
+            for (let row = 0; row < GRID_SIZE; row++) {
+                gameState.grid[row] = [];
+                for (let col = 0; col < GRID_SIZE; col++) {
+                    const isVulnerable = Math.random() < settings.vulnerableChance;
+                    gameState.grid[row][col] = {
+                        row,
+                        col,
+                        state: isVulnerable ? NODE_STATE.VULNERABLE : NODE_STATE.CLEAN,
+                        malware: null,
+                        scanned: false,
+                        turnsQuarantined: 0,
+                        isCritical: false
+                    };
+                }
+            }
+            
+            // Add 3 critical server nodes (cannot be infected or game over)
+            const criticalPositions = [];
+            for (let i = 0; i < 3; i++) {
+                let row, col;
+                do {
+                    row = Math.floor(Math.random() * GRID_SIZE);
+                    col = Math.floor(Math.random() * GRID_SIZE);
+                } while (criticalPositions.some(pos => pos.row === row && pos.col === col));
+                
+                criticalPositions.push({ row, col });
+                gameState.grid[row][col].state = NODE_STATE.CRITICAL;
+                gameState.grid[row][col].isCritical = true;
+            }
+            
+            // Add initial malware
+            const malwareTypes = Object.keys(MALWARE_TYPES);
+            for (let i = 0; i < settings.initialInfected; i++) {
+                const row = Math.floor(Math.random() * GRID_SIZE);
+                const col = Math.floor(Math.random() * GRID_SIZE);
+                const malwareType = malwareTypes[Math.floor(Math.random() * malwareTypes.length)];
+                
+                gameState.grid[row][col].state = NODE_STATE.INFECTED;
+                gameState.grid[row][col].malware = malwareType;
+            }
+            
+            // Reset game state
+            gameState.turn = 1;
+            gameState.score = 0;
+            gameState.selectedAction = null;
+            gameState.selectedNode = null;
+            gameState.undoUsedThisTurn = false;
+            gameState.stats.deletesUsed = 0;
+            gameState.stats.criticalInfected = false;
+            gameState.stats.maxTurn = 0;
+            
+            // Hide start modal
+            document.getElementById('startModal').classList.remove('show');
+            sounds.click();
+            
+            // Render game
+            renderGrid();
+            updateUI();
+            addEvent('Game started! Difficulty: ' + difficulty.toUpperCase(), 'info');
+            addEvent('Eliminate all malware before infection spreads!', 'warning');
+            
+            // Update max score display
+            document.getElementById('maxScore').textContent = loadHighScore();
+            
+            // Start timer
+            startTimer();
+            
+            // Apply master-agent theme if already unlocked
+            if (gameState.achievements.bestAgent) {
+                document.body.classList.add('master-agent');
+            }
+        }
+
+        // Render the grid
+        function renderGrid() {
+            const gridElement = document.getElementById('gameGrid');
+            gridElement.innerHTML = '';
+            
+            for (let row = 0; row < GRID_SIZE; row++) {
+                for (let col = 0; col < GRID_SIZE; col++) {
+                    const node = gameState.grid[row][col];
+                    const nodeElement = document.createElement('div');
+                    nodeElement.className = `node ${node.state}`;
+                    nodeElement.dataset.row = row;
+                    nodeElement.dataset.col = col;
+                    
+                    // Add malware icon if infected and visible
+                    if (node.state === NODE_STATE.INFECTED && node.malware) {
+                        const malwareData = MALWARE_TYPES[node.malware];
+                        if (malwareData.visible || node.scanned) {
+                            const icon = document.createElement('span');
+                            icon.className = 'malware-icon';
+                            icon.textContent = malwareData.icon;
+                            nodeElement.appendChild(icon);
+                        } else {
+                            nodeElement.textContent = '?';
+                        }
+                    }
+                    
+                    // Add critical server icon
+                    if (node.isCritical && node.state === NODE_STATE.CRITICAL) {
+                        nodeElement.textContent = '🖥️';
+                    }
+                    
+                    // Add quarantine timer
+                    if (node.turnsQuarantined > 0) {
+                        nodeElement.textContent = node.turnsQuarantined;
+                    }
+                    
+                    // Add threat indicator (number of adjacent infected nodes)
+                    if (node.state === NODE_STATE.CLEAN || node.state === NODE_STATE.VULNERABLE || node.state === NODE_STATE.PROTECTED) {
+                        const threatCount = countAdjacentThreats(row, col);
+                        if (threatCount > 0) {
+                            const threatBadge = document.createElement('div');
+                            threatBadge.style.position = 'absolute';
+                            threatBadge.style.top = '2px';
+                            threatBadge.style.right = '2px';
+                            threatBadge.style.background = 'rgba(239, 68, 68, 0.9)';
+                            threatBadge.style.color = 'white';
+                            threatBadge.style.borderRadius = '50%';
+                            threatBadge.style.width = '16px';
+                            threatBadge.style.height = '16px';
+                            threatBadge.style.display = 'flex';
+                            threatBadge.style.alignItems = 'center';
+                            threatBadge.style.justifyContent = 'center';
+                            threatBadge.style.fontSize = '10px';
+                            threatBadge.style.fontWeight = 'bold';
+                            threatBadge.textContent = threatCount;
+                            nodeElement.appendChild(threatBadge);
+                        }
+                    }
+                    
+                    nodeElement.onclick = () => handleNodeClick(row, col);
+                    gridElement.appendChild(nodeElement);
+                }
+            }
+        }
+        
+        // Count adjacent infected nodes
+        function countAdjacentThreats(row, col) {
+            let count = 0;
+            const adjacent = [
+                { row: row - 1, col },
+                { row: row + 1, col },
+                { row, col: col - 1 },
+                { row, col: col + 1 },
+                { row: row - 1, col: col - 1 },
+                { row: row - 1, col: col + 1 },
+                { row: row + 1, col: col - 1 },
+                { row: row + 1, col: col + 1 }
+            ];
+            
+            for (const adj of adjacent) {
+                if (adj.row >= 0 && adj.row < GRID_SIZE && adj.col >= 0 && adj.col < GRID_SIZE) {
+                    const node = gameState.grid[adj.row][adj.col];
+                    if (node.state === NODE_STATE.INFECTED) {
+                        count++;
+                    }
+                }
+            }
+            
+            return count;
+        }
+
+        // Handle node click
+        function handleNodeClick(row, col) {
+            if (gameState.gameOver) return;
+            
+            const node = gameState.grid[row][col];
+            gameState.selectedNode = { row, col };
+            
+            // Update selected visual
+            document.querySelectorAll('.node').forEach(n => n.classList.remove('selected'));
+            document.querySelector(`[data-row="${row}"][data-col="${col}"]`).classList.add('selected');
+            
+            // Execute action if one is selected
+            if (gameState.selectedAction) {
+                executeAction(gameState.selectedAction, row, col);
+            }
+        }
+
+        // Select action
+        function selectAction(action) {
+            if (gameState.gameOver) return;
+            
+            // Check if enough actions left
+            const actionCosts = { quarantine: 2, patch: 1, delete: 3 };
+            if (gameState.actionsLeft < actionCosts[action]) {
+                addEvent('Not enough actions remaining!', 'warning');
+                sounds.error();
+                return;
+            }
+            
+            gameState.selectedAction = action;
+            sounds.click();
+            
+            // Update button states
+            document.querySelectorAll('.action-button').forEach(btn => btn.classList.remove('selected'));
+            document.getElementById(action + 'Btn').classList.add('selected');
+            
+            addEvent(`Selected action: ${action.toUpperCase()}. Click a node to execute.`, 'info');
+        }
+
+        // Execute action
+        function executeAction(action, row, col) {
+            const node = gameState.grid[row][col];
+            const actionCosts = { scan: 1, quarantine: 2, patch: 1, delete: 3 };
+            
+            let success = false;
+            let message = '';
+            
+            switch (action) {
+                case 'quarantine':
+                    if (node.state === NODE_STATE.INFECTED) {
+                        node.state = NODE_STATE.QUARANTINED;
+                        node.turnsQuarantined = 3;
+                        success = true;
+                        message = `Quarantined infected node (${row}, ${col}) for 3 turns`;
+                        gameState.score += 5;
+                    } else {
+                        message = `Can only quarantine infected nodes`;
+                    }
+                    break;
+                    
+                case 'patch':
+                    if (node.state === NODE_STATE.CRITICAL) {
+                        message = `Cannot patch critical servers - they are vulnerable by design`;
+                    } else if (node.state === NODE_STATE.VULNERABLE || node.state === NODE_STATE.CLEAN) {
+                        node.state = NODE_STATE.PROTECTED;
+                        success = true;
+                        message = `Patched node (${row}, ${col}) - now protected`;
+                        gameState.score += 3;
+                    } else {
+                        message = `Can only patch clean or vulnerable nodes`;
+                    }
+                    break;
+                    
+                case 'delete':
+                    if (node.state === NODE_STATE.INFECTED || node.state === NODE_STATE.QUARANTINED) {
+                        const malwareType = node.malware;
+                        node.state = node.isCritical ? NODE_STATE.CRITICAL : NODE_STATE.CLEAN;
+                        node.malware = null;
+                        success = true;
+                        message = `Deleted malware from node (${row}, ${col})`;
+                        gameState.score += 10;
+                        gameState.stats.deletesUsed++;
+                    } else {
+                        message = `No malware to delete at (${row}, ${col})`;
+                    }
+                    break;
+            }
+            
+            if (success) {
+                // Save state for undo
+                saveActionHistory(action, row, col, actionCosts[action]);
+                
+                gameState.actionsLeft -= actionCosts[action];
+                addEvent(message, 'success');
+                sounds.success();
+                
+                // Clear selection
+                gameState.selectedAction = null;
+                document.querySelectorAll('.action-button').forEach(btn => btn.classList.remove('selected'));
+                
+                renderGrid();
+                updateUI();
+                checkWinCondition();
+            } else {
+                addEvent(message, 'warning');
+                sounds.error();
+            }
+        }
+        
+        // Save action for undo
+        function saveActionHistory(action, row, col, cost) {
+            const node = gameState.grid[row][col];
+            gameState.actionHistory.push({
+                action: action,
+                row: row,
+                col: col,
+                cost: cost,
+                previousState: {
+                    state: node.state,
+                    malware: node.malware,
+                    scanned: node.scanned,
+                    turnsQuarantined: node.turnsQuarantined
+                },
+                actionsLeft: gameState.actionsLeft,
+                score: gameState.score
+            });
+        }
+        
+        // Undo last action
+        function undoLastAction() {
+            if (gameState.gameOver) return;
+            
+            if (gameState.undoUsedThisTurn) {
+                addEvent('Undo already used this turn (1 per turn limit)', 'warning');
+                sounds.error();
+                return;
+            }
+            
+            if (gameState.actionHistory.length === 0) {
+                addEvent('Nothing to undo', 'warning');
+                sounds.error();
+                return;
+            }
+            
+            const lastAction = gameState.actionHistory.pop();
+            const node = gameState.grid[lastAction.row][lastAction.col];
+            
+            // Restore node state
+            node.state = lastAction.previousState.state;
+            node.malware = lastAction.previousState.malware;
+            node.scanned = lastAction.previousState.scanned;
+            node.turnsQuarantined = lastAction.previousState.turnsQuarantined;
+            
+            // Restore actions and score
+            gameState.actionsLeft = lastAction.actionsLeft;
+            gameState.score = lastAction.score;
+            
+            // Mark undo as used this turn
+            gameState.undoUsedThisTurn = true;
+            
+            addEvent(`Undone: ${lastAction.action.toUpperCase()} at (${lastAction.row}, ${lastAction.col})`, 'info');
+            sounds.click();
+            
+            renderGrid();
+            updateUI();
+        }
+
+        // End turn
+        function endTurn() {
+            if (gameState.gameOver) return;
+            
+            // Spread malware first
+            spreadMalware();
+            
+            // Update quarantine timers after spreading
+            for (let row = 0; row < GRID_SIZE; row++) {
+                for (let col = 0; col < GRID_SIZE; col++) {
+                    const node = gameState.grid[row][col];
+                    if (node.turnsQuarantined > 0) {
+                        node.turnsQuarantined--;
+                        if (node.turnsQuarantined === 0 && node.state === NODE_STATE.QUARANTINED) {
+                            node.state = NODE_STATE.INFECTED;
+                            addEvent(`Quarantine expired at (${row}, ${col})`, 'warning');
+                        }
+                    }
+                }
+            }
+            
+            // Increment turn
+            gameState.turn++;
+            gameState.actionsLeft = gameState.actionsPerTurn;
+            gameState.selectedAction = null;
+            gameState.actionHistory = []; // Clear undo history on new turn
+            gameState.undoUsedThisTurn = false; // Reset undo availability for new turn
+            
+            // Award power-ups every 5 turns
+            if (gameState.turn % 5 === 0) {
+                const powerUpTypes = ['firewall', 'antivirus'];
+                const randomPowerUp = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
+                gameState.powerUps[randomPowerUp]++;
+                addEvent(`Power-up earned: ${randomPowerUp.toUpperCase()}!`, 'success');
+            }
+            
+            document.querySelectorAll('.action-button').forEach(btn => btn.classList.remove('selected'));
+            
+            renderGrid();
+            updateUI();
+            checkLoseCondition();
+            
+            addEvent(`Turn ${gameState.turn} started`, 'info');
+        }
+
+        // Spread malware
+        function spreadMalware() {
+            const newInfections = [];
+            
+            for (let row = 0; row < GRID_SIZE; row++) {
+                for (let col = 0; col < GRID_SIZE; col++) {
+                    const node = gameState.grid[row][col];
+                    
+                    if (node.state === NODE_STATE.INFECTED && node.turnsQuarantined === 0) {
+                        const malwareData = MALWARE_TYPES[node.malware];
+                        
+                        // Get adjacent nodes
+                        const adjacent = [
+                            { row: row - 1, col },
+                            { row: row + 1, col },
+                            { row, col: col - 1 },
+                            { row, col: col + 1 }
+                        ];
+                        
+                        // For botnet, also include diagonals
+                        if (node.malware === 'BOTNET') {
+                            adjacent.push(
+                                { row: row - 1, col: col - 1 },
+                                { row: row - 1, col: col + 1 },
+                                { row: row + 1, col: col - 1 },
+                                { row: row + 1, col: col + 1 }
+                            );
+                        }
+                        
+                        // Try to spread
+                        for (const adj of adjacent) {
+                            if (adj.row >= 0 && adj.row < GRID_SIZE && adj.col >= 0 && adj.col < GRID_SIZE) {
+                                const targetNode = gameState.grid[adj.row][adj.col];
+                                
+                                if (targetNode.state === NODE_STATE.VULNERABLE || 
+                                    targetNode.state === NODE_STATE.CLEAN ||
+                                    targetNode.state === NODE_STATE.CRITICAL) {
+                                    
+                                    if (Math.random() < malwareData.spreadRate) {
+                                        newInfections.push({
+                                            row: adj.row,
+                                            col: adj.col,
+                                            malware: node.malware,
+                                            isCritical: targetNode.isCritical
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Apply new infections with animation
+            for (const infection of newInfections) {
+                const node = gameState.grid[infection.row][infection.col];
+                if (node.state !== NODE_STATE.PROTECTED && node.state !== NODE_STATE.QUARANTINED) {
+                    node.state = NODE_STATE.INFECTED;
+                    node.malware = infection.malware;
+                    const malwareName = MALWARE_TYPES[infection.malware].name;
+                    addEvent(`${malwareName} spread to (${infection.row}, ${infection.col})`, 'danger');
+                    sounds.spread();
+                    
+                    // Add spread animation
+                    setTimeout(() => {
+                        const nodeElement = document.querySelector(`[data-row="${infection.row}"][data-col="${infection.col}"]`);
+                        if (nodeElement) {
+                            nodeElement.classList.add('spreading');
+                            setTimeout(() => nodeElement.classList.remove('spreading'), 500);
+                        }
+                    }, 50);
+                    
+                    // Check if critical node was infected
+                    if (infection.isCritical) {
+                        gameState.stats.criticalInfected = true;
+                        addEvent(`⚠️ CRITICAL SERVER INFECTED at (${infection.row}, ${infection.col})!`, 'danger');
+                        // Instant game over if critical node infected
+                        gameState.gameOver = true;
+                        showGameOver(false, 'A critical server was compromised!');
+                    }
+                }
+            }
+            
+            // Random mutations
+            if (Math.random() < 0.1) {
+                const row = Math.floor(Math.random() * GRID_SIZE);
+                const col = Math.floor(Math.random() * GRID_SIZE);
+                const node = gameState.grid[row][col];
+                
+                if (node.state === NODE_STATE.VULNERABLE) {
+                    const malwareTypes = Object.keys(MALWARE_TYPES);
+                    const malwareType = malwareTypes[Math.floor(Math.random() * malwareTypes.length)];
+                    node.state = NODE_STATE.INFECTED;
+                    node.malware = malwareType;
+                    addEvent(`New ${MALWARE_TYPES[malwareType].name} appeared at (${row}, ${col})!`, 'danger');
+                }
+            }
+        }
+
+        // Update UI
+        function updateUI() {
+            document.getElementById('turnCount').textContent = gameState.turn;
+            document.getElementById('score').textContent = gameState.score;
+            document.getElementById('maxScore').textContent = loadHighScore();
+            document.getElementById('actionsLeft').textContent = gameState.actionsLeft;
+            
+            // Count infected nodes
+            let infectedCount = 0;
+            for (let row = 0; row < GRID_SIZE; row++) {
+                for (let col = 0; col < GRID_SIZE; col++) {
+                    if (gameState.grid[row][col].state === NODE_STATE.INFECTED) {
+                        infectedCount++;
+                    }
+                }
+            }
+            document.getElementById('infectedCount').textContent = infectedCount;
+            
+            // Update power-up counts and button states
+            document.getElementById('firewallCount').textContent = gameState.powerUps.firewall;
+            document.getElementById('antivirusCount').textContent = gameState.powerUps.antivirus;
+            
+            document.getElementById('firewallBtn').disabled = gameState.powerUps.firewall === 0;
+            document.getElementById('antivirusBtn').disabled = gameState.powerUps.antivirus === 0;
+        }
+        
+        // Use power-up
+        function usePowerUp(type) {
+            if (gameState.gameOver || gameState.powerUps[type] === 0) return;
+            
+            gameState.powerUps[type]--;
+            
+            switch (type) {
+                case 'firewall':
+                    // Protect all vulnerable nodes
+                    let protectedCount = 0;
+                    for (let row = 0; row < GRID_SIZE; row++) {
+                        for (let col = 0; col < GRID_SIZE; col++) {
+                            const node = gameState.grid[row][col];
+                            if (node.state === NODE_STATE.VULNERABLE) {
+                                node.state = NODE_STATE.PROTECTED;
+                                protectedCount++;
+                            }
+                        }
+                    }
+                    addEvent(`Firewall activated! Protected ${protectedCount} vulnerable nodes`, 'success');
+                    gameState.score += protectedCount * 2;
+                    break;
+                    
+                case 'antivirus':
+                    // Delete one random infected node
+                    const infected = [];
+                    for (let row = 0; row < GRID_SIZE; row++) {
+                        for (let col = 0; col < GRID_SIZE; col++) {
+                            if (gameState.grid[row][col].state === NODE_STATE.INFECTED) {
+                                infected.push({ row, col });
+                            }
+                        }
+                    }
+                    if (infected.length > 0) {
+                        const target = infected[Math.floor(Math.random() * infected.length)];
+                        const node = gameState.grid[target.row][target.col];
+                        node.state = node.isCritical ? NODE_STATE.CRITICAL : NODE_STATE.CLEAN;
+                        node.malware = null;
+                        addEvent(`Antivirus eliminated malware at (${target.row}, ${target.col})`, 'success');
+                        gameState.score += 8;
+                    }
+                    break;
+            }
+            
+            sounds.powerup();
+            renderGrid();
+            updateUI();
+            checkWinCondition();
+        }
+
+        // Add event to log (disabled)
+        function addEvent(message, type = 'info') {
+            // Event log removed from UI
+        }
+
+        // Check win condition
+        function checkWinCondition() {
+            let hasInfection = false;
+            
+            for (let row = 0; row < GRID_SIZE; row++) {
+                for (let col = 0; col < GRID_SIZE; col++) {
+                    const node = gameState.grid[row][col];
+                    if (node.state === NODE_STATE.INFECTED || node.state === NODE_STATE.QUARANTINED) {
+                        hasInfection = true;
+                        break;
+                    }
+                }
+                if (hasInfection) break;
+            }
+            
+            if (!hasInfection) {
+                gameState.gameOver = true;
+                checkAchievements();
+                showGameOver(true);
+            }
+        }
+
+        // Check lose condition
+        function checkLoseCondition() {
+            let infectedCount = 0;
+            const totalNodes = GRID_SIZE * GRID_SIZE;
+            
+            for (let row = 0; row < GRID_SIZE; row++) {
+                for (let col = 0; col < GRID_SIZE; col++) {
+                    if (gameState.grid[row][col].state === NODE_STATE.INFECTED) {
+                        infectedCount++;
+                    }
+                }
+            }
+            
+            const infectionRate = infectedCount / totalNodes;
+            gameState.stats.maxTurn = Math.max(gameState.stats.maxTurn, gameState.turn);
+            
+            if (infectionRate >= 0.4) {
+                gameState.gameOver = true;
+                checkAchievements();
+                showGameOver(false, 'Infection spread beyond 40%!');
+            }
+        }
+        
+        // Check and award achievements
+        function checkAchievements() {
+            let newAchievements = [];
+            
+            // Speed Run: Win easy under 15 seconds
+            if (!gameState.achievements.speedRun && gameState.difficulty === 'easy' && gameState.elapsedTime < 15) {
+                gameState.achievements.speedRun = true;
+                newAchievements.push('⚡ SPEED RUN: Finished EASY in under 15 seconds!');
+            }
+            
+            // Pro Speed Run: Win medium under 30 seconds
+            if (!gameState.achievements.proSpeedRun && gameState.difficulty === 'medium' && gameState.elapsedTime < 30) {
+                gameState.achievements.proSpeedRun = true;
+                newAchievements.push('⚡⚡ PRO SPEED RUN: Finished MEDIUM in under 30 seconds!');
+            }
+            
+            // Goldy Speed Run: Win hard under 45 seconds
+            if (!gameState.achievements.goldySpeedRun && gameState.difficulty === 'hard' && gameState.elapsedTime < 45) {
+                gameState.achievements.goldySpeedRun = true;
+                newAchievements.push('🏆 GOLDY SPEED RUN: Finished HARD in under 45 seconds!');
+            }
+            
+            // Ultimate Speed Runner: Win hard under 30 seconds
+            if (!gameState.achievements.godlySpeedRun && gameState.difficulty === 'hard' && gameState.elapsedTime < 30) {
+                gameState.achievements.godlySpeedRun = true;
+                newAchievements.push('🔥 ULTIMATE SPEED RUNNER: Finished HARD in under 30 seconds!');
+            }
+            
+            // No Delete: Win without using Delete
+            if (!gameState.achievements.noDelete && gameState.stats.deletesUsed === 0) {
+                gameState.achievements.noDelete = true;
+                newAchievements.push('🛡️ DEFENSIVE MASTER: Won without using Delete!');
+            }
+            
+            // Perfect Defense: Win with no critical nodes infected
+            if (!gameState.achievements.perfectDefense && !gameState.stats.criticalInfected) {
+                gameState.achievements.perfectDefense = true;
+                newAchievements.push('🖥️ PERFECT DEFENSE: No critical servers compromised!');
+            }
+            
+            // Survivor: Survive 20 turns
+            if (!gameState.achievements.survivor && gameState.stats.maxTurn >= 20) {
+                gameState.achievements.survivor = true;
+                newAchievements.push('⏱️ SURVIVOR: Survived 20+ turns!');
+            }
+            
+            // Super Survivor: Survive 50 turns
+            if (!gameState.achievements.superSurvivor && gameState.stats.maxTurn >= 50) {
+                gameState.achievements.superSurvivor = true;
+                newAchievements.push('⏱️⏱️ SUPER SURVIVOR: Survived 50+ turns!');
+            }
+            
+            // Best Security Agent: Unlock all other achievements
+            if (!gameState.achievements.bestAgent && 
+                gameState.achievements.speedRun && 
+                gameState.achievements.proSpeedRun && 
+                gameState.achievements.goldySpeedRun && 
+                gameState.achievements.godlySpeedRun && 
+                gameState.achievements.noDelete && 
+                gameState.achievements.perfectDefense && 
+                gameState.achievements.survivor && 
+                gameState.achievements.superSurvivor) {
+                gameState.achievements.bestAgent = true;
+                newAchievements.push('👑 BEST SECURITY AGENT: All achievements unlocked!');
+                // Apply lavender theme immediately
+                document.body.classList.add('master-agent');
+            }
+            
+            // Save achievements to localStorage
+            if (newAchievements.length > 0) {
+                saveAchievements();
+            }
+            
+            // Show achievements
+            if (newAchievements.length > 0) {
+                for (const achievement of newAchievements) {
+                    addEvent(achievement, 'success');
+                }
+                // Award points for achievements
+                let achievementPoints = 0;
+                newAchievements.forEach(a => {
+                    if (a.includes('BEST SECURITY AGENT')) achievementPoints += 200;
+                    else if (a.includes('ULTIMATE SPEED RUNNER')) achievementPoints += 150;
+                    else if (a.includes('GOLDY SPEED RUN') || a.includes('SUPER SURVIVOR')) achievementPoints += 100;
+                    else if (a.includes('PRO SPEED RUN')) achievementPoints += 75;
+                    else achievementPoints += 50;
+                });
+                gameState.score += achievementPoints;
+            }
+        }
+
+        // Show game over modal
+        function showGameOver(won, reason = '') {
+            const modal = document.getElementById('gameOverModal');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            
+            // Stop timer
+            stopTimer();
+            const finalTime = formatTime(gameState.elapsedTime);
+            
+            // Save to score history
+            saveToScoreHistory(gameState.score, gameState.difficulty, gameState.turn, won, finalTime);
+            
+            // Check for new high score
+            const isNewHighScore = saveHighScore(gameState.score);
+            const highScoreText = isNewHighScore ? '<br>🎊 NEW HIGH SCORE! 🎊' : '';
+            
+            // Count achievements (excluding bestAgent from base count if not all unlocked)
+            const baseAchievements = [gameState.achievements.speedRun, gameState.achievements.proSpeedRun,
+                                     gameState.achievements.goldySpeedRun, gameState.achievements.godlySpeedRun,
+                                     gameState.achievements.noDelete, gameState.achievements.perfectDefense,
+                                     gameState.achievements.survivor, gameState.achievements.superSurvivor];
+            const baseCount = baseAchievements.filter(a => a).length;
+            const hasBestAgent = gameState.achievements.bestAgent;
+            const totalCount = baseCount + (hasBestAgent ? 1 : 0);
+            const achievementText = totalCount > 0 ? `<br>🏆 Achievements: ${totalCount}/10${hasBestAgent ? ' 👑' : ''}` : '';
+            
+            if (won) {
+                title.textContent = '🎉 VICTORY!';
+                title.style.color = '#10b981';
+                message.innerHTML = `
+                    Congratulations! You've eliminated all malware!<br><br>
+                    <strong>Final Score: ${gameState.score}</strong>${highScoreText}<br>
+                    Time: ${finalTime}<br>
+                    Turns: ${gameState.turn}<br>
+                    Difficulty: ${gameState.difficulty.toUpperCase()}
+                    ${achievementText}
+                `;
+                sounds.win();
+            } else {
+                title.textContent = '💀 SYSTEM COMPROMISED';
+                title.style.color = '#ef4444';
+                const loseReason = reason || 'The malware has spread beyond control!';
+                message.innerHTML = `
+                    ${loseReason}<br><br>
+                    <strong>Final Score: ${gameState.score}</strong>${highScoreText}<br>
+                    Time: ${finalTime}<br>
+                    Turns Survived: ${gameState.turn}<br>
+                    Difficulty: ${gameState.difficulty.toUpperCase()}
+                    ${achievementText}
+                `;
+                sounds.lose();
+            }
+            
+            // Update max score display
+            updateUI();
+            
+            modal.classList.add('show');
+        }
+
+        // Restart game
+        function restartGame() {
+            stopTimer();
+            document.getElementById('gameOverModal').classList.remove('show');
+            document.getElementById('startModal').classList.add('show');
+        }
+    </script>
+</body>
+</html>

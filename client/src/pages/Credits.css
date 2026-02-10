@@ -1,0 +1,98 @@
+.credits-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+  text-align: center;
+}
+
+.credits-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 900;
+  letter-spacing: 6px;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.credits-line {
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-magenta), transparent);
+  margin: 16px auto 12px;
+}
+
+.credits-subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 40px;
+}
+
+.credits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+
+.credit-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 3px solid var(--accent, var(--neon-cyan));
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.credit-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.credit-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.credit-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.credit-game {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.85rem;
+  transition: color 0.3s ease;
+}
+
+.credit-game:hover {
+  color: var(--neon-cyan);
+}
+
+.credits-back {
+  display: inline-block;
+  margin-top: 40px;
+  padding: 12px 32px;
+  border: 1px solid var(--neon-cyan);
+  border-radius: 8px;
+  color: var(--neon-cyan);
+  text-decoration: none;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
+}
+
+.credits-back:hover {
+  background: rgba(0, 255, 255, 0.1);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}

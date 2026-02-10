@@ -1,0 +1,80 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>so you think you're a hacker?</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="game-active">
+    <div class="stars"></div>
+    <div class="container">
+        <div class="game-hud">
+            <div class="hud-item">
+                <div class="hud-label">TIMER</div>
+                <div id="timer" class="hud-value timer-value">60</div>
+            </div>
+            <div class="hud-item">
+                <div class="hud-label">SCORE</div>
+                <div id="score" class="hud-value score-value">0</div>
+            </div>
+            <div class="hud-item">
+                <div class="hud-label">PROGRESS</div>
+                <div id="progress" class="hud-value progress-value">1/15</div>
+            </div>
+        </div>
+
+        <div class="terminal-window game-terminal">
+            <div class="terminal-header">
+                <span class="terminal-dot red"></span>
+                <span class="terminal-dot yellow"></span>
+                <span class="terminal-dot green"></span>
+                <span class="terminal-title">SCHEDULER_DAEMON.exe</span>
+            </div>
+            
+            <div class="terminal-body">
+                <!-- Challenge Display -->
+                <div id="challenge-container" class="challenge-container">
+                    <div class="challenge-header">
+                        <span class="pulse-dot"></span>
+                        <span>TASK ASSIGNED</span>
+                        <span class="pulse-dot"></span>
+                    </div>
+                    <div id="scenario" class="scenario-text"></div>
+                    
+                    <div id="options-container" class="options-container">
+                        <!-- Options will be dynamically loaded -->
+                    </div>
+                </div>
+
+                <!-- Feedback Display (hidden by default) -->
+                <div id="feedback-container" class="feedback-container hidden">
+                    <div id="feedback-result" class="feedback-result"></div>
+                    <div id="feedback-explanation" class="feedback-explanation"></div>
+                    <button id="next-btn" class="btn-next">
+                        NEXT TASK <span class="arrow">&gt;&gt;</span>
+                    </button>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loading" class="loading-state hidden">
+                    <div class="loading-spinner"></div>
+                    <p>PROCESSING TASK<span class="loading-dots">...</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="game-over-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 class="modal-title">⏰ TIME EXPIRED</h2>
+            <p class="modal-text">System breach imminent. Redirecting to debriefing...</p>
+            <div class="modal-spinner"></div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

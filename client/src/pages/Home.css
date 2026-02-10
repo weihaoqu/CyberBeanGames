@@ -1,0 +1,143 @@
+.home {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Hero */
+.hero {
+  text-align: center;
+  padding: 80px 0 60px;
+  position: relative;
+}
+
+.hero-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(0, 255, 255, 0.08) 0%, rgba(255, 0, 255, 0.04) 50%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: 4px;
+  position: relative;
+}
+
+.title-cyber {
+  display: block;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.5));
+}
+
+.title-bean {
+  display: block;
+  background: linear-gradient(135deg, var(--neon-magenta), var(--neon-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 30px rgba(255, 0, 255, 0.5));
+}
+
+.title-games {
+  display: block;
+  background: linear-gradient(135deg, var(--neon-blue), var(--neon-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 30px rgba(0, 102, 255, 0.5));
+}
+
+.hero-subtitle {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  color: var(--neon-cyan);
+  letter-spacing: 8px;
+  margin-top: 16px;
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.hero-line {
+  width: 200px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-magenta), transparent);
+  margin: 24px auto;
+}
+
+.hero-desc {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto;
+  font-weight: 500;
+}
+
+/* Games Section */
+.games-section {
+  padding-bottom: 80px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.section-header h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--text-primary);
+}
+
+.section-accent {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan));
+}
+
+.section-accent:last-child {
+  background: linear-gradient(90deg, var(--neon-cyan), transparent);
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.game-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+@media (max-width: 1023px) {
+  .games-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .hero {
+    padding: 50px 0 40px;
+  }
+  .games-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-subtitle {
+    letter-spacing: 4px;
+  }
+}

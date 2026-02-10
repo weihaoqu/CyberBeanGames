@@ -1,0 +1,7 @@
+{
+  "name": "PhishTank",
+  "description": "An immersive cyber security game simulating a smartphone. Detect phishing texts, verify emails, and battle AI scammers in real-time voice calls.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

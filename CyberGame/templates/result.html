@@ -1,0 +1,139 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>so you think you're a hacker?</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="container">
+        <div class="terminal-window results-terminal">
+            <div class="terminal-header">
+                <span class="terminal-dot red"></span>
+                <span class="terminal-dot yellow"></span>
+                <span class="terminal-dot green"></span>
+                <span class="terminal-title">ANALYSIS_ENGINE.exe</span>
+            </div>
+            
+            <div class="terminal-body results-body">
+                <div class="results-header">
+                    <h1 class="glitch-text" data-text="SIMULATION COMPLETE">SIMULATION COMPLETE</h1>
+                    <p class="results-subtitle">SYSTEM ANALYSIS REPORT</p>
+                </div>
+
+                <div class="results-grid">
+                    <!-- Score Card -->
+                    <div class="result-card">
+                        <div class="card-icon">📊</div>
+                        <div class="card-label">FINAL SCORE</div>
+                        <div class="card-value score-display">{{ score }}</div>
+                    </div>
+
+                    <!-- Challenges Completed -->
+                    <div class="result-card">
+                        <div class="card-icon">✅</div>
+                        <div class="card-label">THREATS HANDLED</div>
+                        <div class="card-value">{{ challenges_completed }}/{{ total_challenges }}</div>
+                    </div>
+
+                    <!-- Accuracy -->
+                    <div class="result-card">
+                        <div class="card-icon">🎯</div>
+                        <div class="card-label">ACCURACY</div>
+                        <div class="card-value">
+                            {% if challenges_completed > 0 %}
+                                {# Derivation: score = 10*c -5*(n-c) = 15*c -5*n => c = (score + 5n)/15 #}
+                                {% set raw = ((score + (challenges_completed * 5)) / (challenges_completed * 15) * 100) %}
+                                {% set acc = raw | round | int %}
+                                {% if acc < 0 %}
+                                    0%
+                                {% elif acc > 100 %}
+                                    100%
+                                {% else %}
+                                    {{ acc }}%
+                                {% endif %}
+                            {% else %}
+                                0%
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rank Display -->
+                <div class="rank-display rank-{{ rank_class }}">
+                    <div class="rank-badge-large">
+                        <div class="rank-icon-large">{{ rank_icon }}</div>
+                        <div class="rank-title">{{ rank }}</div>
+                    </div>
+                    
+                    <div class="rank-description">
+                        {% if rank_class == 'master' %}
+                            <p><strong>EXCEPTIONAL PERFORMANCE!</strong></p>
+                            <p>You've demonstrated elite-level cybersecurity awareness. Your quick thinking and knowledge saved the system from complete compromise.</p>
+                        {% elif rank_class == 'senior' %}
+                            <p><strong>EXCELLENT WORK!</strong></p>
+                            <p>Your strong security knowledge effectively defended against most threats. Continue honing your skills to reach master level.</p>
+                        {% elif rank_class == 'analyst' %}
+                            <p><strong>SOLID FOUNDATION!</strong></p>
+                            <p>You've shown good cybersecurity fundamentals. With more practice and study, you'll advance to the senior ranks.</p>
+                        {% else %}
+                            <p><strong>TRAINING RECOMMENDED!</strong></p>
+                            <p>Keep learning and practicing. Cybersecurity requires constant vigilance and education. Review the scenarios and try again!</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Security Tips -->
+                <div class="tips-container">
+                    <h3 class="tips-header">🔐 KEY SECURITY TAKEAWAYS</h3>
+                    <div class="tips-grid">
+                        <div class="tip-item">
+                            <span class="tip-icon">🛡️</span>
+                            <span>Always verify suspicious emails and links</span>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">🔑</span>
+                            <span>Use strong, unique passwords with 2FA</span>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">⬆️</span>
+                            <span>Keep software and systems updated</span>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">🔒</span>
+                            <span>Never share credentials or click unknown links</span>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">🌐</span>
+                            <span>Use VPN on public WiFi networks</span>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">💾</span>
+                            <span>Regular backups prevent data loss</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="results-actions">
+                    <a href="/play" class="btn-hack btn-primary">
+                        <span class="btn-icon">🔄</span>
+                        TRY AGAIN
+                    </a>
+                    <a href="/" class="btn-hack btn-secondary">
+                        <span class="btn-icon">🏠</span>
+                        RETURN HOME
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-info">
+            <p>STAY CURIOUS | THINK LIKE AN ENGINEER | ANALYZE BEFORE YOU ACT</p>
+        </div>
+    </div>
+</body>
+</html>

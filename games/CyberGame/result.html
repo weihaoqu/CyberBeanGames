@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>so you think you're a hacker?</title>
+    <link rel="stylesheet" href="/games/CyberGame/static/style.css">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="container">
+        <div class="terminal-window results-terminal">
+            <div class="terminal-header">
+                <span class="terminal-dot red"></span>
+                <span class="terminal-dot yellow"></span>
+                <span class="terminal-dot green"></span>
+                <span class="terminal-title">ANALYSIS_ENGINE.exe</span>
+            </div>
+            <div class="terminal-body results-body">
+                <div class="results-header">
+                    <h1 class="glitch-text" data-text="SIMULATION COMPLETE">SIMULATION COMPLETE</h1>
+                    <p class="results-subtitle">SYSTEM ANALYSIS REPORT</p>
+                </div>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="card-icon">SCORE</div>
+                        <div class="card-label">FINAL SCORE</div>
+                        <div class="card-value score-display" id="final-score">0</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="card-icon">DONE</div>
+                        <div class="card-label">THREATS HANDLED</div>
+                        <div class="card-value" id="threats-handled">0/15</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="card-icon">TARGET</div>
+                        <div class="card-label">ACCURACY</div>
+                        <div class="card-value" id="accuracy">0%</div>
+                    </div>
+                </div>
+                <div class="rank-display" id="rank-display">
+                    <div class="rank-badge-large">
+                        <div class="rank-icon-large" id="rank-icon"></div>
+                        <div class="rank-title" id="rank-title"></div>
+                    </div>
+                    <div class="rank-description" id="rank-desc"></div>
+                </div>
+                <div class="tips-container">
+                    <h3 class="tips-header">KEY SECURITY TAKEAWAYS</h3>
+                    <div class="tips-grid">
+                        <div class="tip-item"><span class="tip-icon">SHIELD</span><span>Always verify suspicious emails and links</span></div>
+                        <div class="tip-item"><span class="tip-icon">KEY</span><span>Use strong, unique passwords with 2FA</span></div>
+                        <div class="tip-item"><span class="tip-icon">UP</span><span>Keep software and systems updated</span></div>
+                        <div class="tip-item"><span class="tip-icon">LOCK</span><span>Never share credentials or click unknown links</span></div>
+                        <div class="tip-item"><span class="tip-icon">NET</span><span>Use VPN on public WiFi networks</span></div>
+                        <div class="tip-item"><span class="tip-icon">SAVE</span><span>Regular backups prevent data loss</span></div>
+                    </div>
+                </div>
+                <div class="results-actions">
+                    <a href="/games/CyberGame/index.html" class="btn-hack btn-primary" id="try-again">TRY AGAIN</a>
+                    <a href="/games/CyberGame/index.html" class="btn-hack btn-secondary">RETURN HOME</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-info">
+            <p>STAY CURIOUS | THINK LIKE AN ENGINEER | ANALYZE BEFORE YOU ACT</p>
+        </div>
+    </div>
+    <script>
+        const API = '/api/hack-the-system';
+
+        const rankMessages = {
+            master: { icon: 'CROWN', title: 'EXCEPTIONAL PERFORMANCE!', desc: "You've demonstrated elite-level cybersecurity awareness. Your quick thinking and knowledge saved the system from complete compromise." },
+            senior: { icon: 'STAR', title: 'EXCELLENT WORK!', desc: "Your strong security knowledge effectively defended against most threats. Continue honing your skills to reach master level." },
+            analyst: { icon: 'SHIELD', title: 'SOLID FOUNDATION!', desc: "You've shown good cybersecurity fundamentals. With more practice and study, you'll advance to the senior ranks." },
+            apprentice: { icon: 'BOOK', title: 'TRAINING RECOMMENDED!', desc: "Keep learning and practicing. Cybersecurity requires constant vigilance and education. Review the scenarios and try again!" }
+        };
+
+        fetch(API + '/result', { credentials: 'include' })
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('final-score').textContent = data.score;
+                document.getElementById('threats-handled').textContent = data.challenges_completed + '/' + data.total_challenges;
+
+                let acc = 0;
+                if (data.challenges_completed > 0) {
+                    acc = Math.round(((data.score + data.challenges_completed * 5) / (data.challenges_completed * 15)) * 100);
+                    acc = Math.max(0, Math.min(100, acc));
+                }
+                document.getElementById('accuracy').textContent = acc + '%';
+
+                const display = document.getElementById('rank-display');
+                display.className = 'rank-display rank-' + data.rank_class;
+                document.getElementById('rank-icon').textContent = rankMessages[data.rank_class].icon;
+                document.getElementById('rank-title').textContent = data.rank;
+
+                const desc = rankMessages[data.rank_class];
+                document.getElementById('rank-desc').innerHTML =
+                    '<p><strong>' + desc.title + '</strong></p><p>' + desc.desc + '</p>';
+            });
+    </script>
+</body>
+</html>

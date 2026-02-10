@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Control Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @keyframes floatingBackground {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #1e3c72, #2a5298, #764ba2, #667eea);
+            background-size: 400% 400%;
+            animation: floatingBackground 15s ease infinite;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 25px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+            overflow: hidden;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 35px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.05) 10px,
+                rgba(255,255,255,0.05) 20px
+            );
+            animation: headerShift 20s linear infinite;
+        }
+
+        @keyframes headerShift {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .header p {
+            position: relative;
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .score-section {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            font-size: 1.3em;
+            position: relative;
+        }
+
+        .score-section > div {
+            background: rgba(255,255,255,0.2);
+            padding: 12px 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.3s;
+        }
+
+        .score-section > div:hover {
+            transform: scale(1.1);
+            background: rgba(255,255,255,0.3);
+        }
+
+        .game-area {
+            padding: 30px;
+        }
+
+        @keyframes scenarioEntry {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .scenario {
+            background: linear-gradient(135deg, #fff9e6 0%, #f8f9fa 100%);
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            animation: scenarioEntry 0.5s ease-out;
+        }
+
+        .scenario h3 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.4em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .employee-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 3px solid transparent;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .employee-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(103, 126, 234, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .employee-card:hover::before {
+            left: 100%;
+        }
+
+        .employee-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        .employee-main {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex: 1;
+        }
+
+        @keyframes avatarBounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(-5deg); }
+            75% { transform: translateY(-5px) rotate(5deg); }
+        }
+
+        .employee-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            flex-shrink: 0;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            animation: avatarBounce 3s ease-in-out infinite;
+            border: 4px solid white;
+        }
+
+        .employee-info {
+            flex: 1;
+        }
+
+        .employee-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 8px;
+        }
+
+        .employee-role {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 1em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .employee-details {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.5;
+            margin-top: 8px;
+        }
+
+        @keyframes resourcePulse {
+            0%, 100% { box-shadow: 0 4px 10px rgba(255, 193, 7, 0.2); }
+            50% { box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4); }
+        }
+
+        .resource-info {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(255, 193, 7, 0.2);
+            animation: resourcePulse 2s ease-in-out infinite;
+        }
+
+        .resource-info strong {
+            color: #856404;
+        }
+
+        .decision-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-grant {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+        }
+
+        .btn-grant:hover {
+            background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-deny {
+            background: linear-gradient(135deg, #f44336 0%, #da190b 100%);
+            color: white;
+        }
+
+        .btn-deny:hover {
+            background: linear-gradient(135deg, #da190b 0%, #c41709 100%);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @keyframes feedbackSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 25px;
+            border-radius: 15px;
+            font-weight: bold;
+            display: none;
+            animation: feedbackSlide 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .feedback.correct {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border: 3px solid #4caf50;
+        }
+
+        .feedback.incorrect {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            border: 3px solid #f44336;
+        }
+
+        @keyframes iconBounce {
+            0% { transform: scale(0) rotate(-180deg); }
+            50% { transform: scale(1.3) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .feedback-icon {
+            font-size: 4em;
+            margin-bottom: 10px;
+            animation: iconBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: inline-block;
+        }
+
+        .next-scenario {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 50px;
+            display: none;
+            font-size: 1.2em;
+        }
+
+        .btn-next:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        @keyframes gameOverEntry {
+            from {
+                opacity: 0;
+                transform: scale(0.5) rotate(-10deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        .game-over {
+            text-align: center;
+            padding: 60px 30px;
+            display: none;
+            animation: gameOverEntry 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes titleBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .game-over h2 {
+            color: #667eea;
+            font-size: 3em;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: titleBounce 1s ease-out;
+        }
+
+        .game-over p {
+            font-size: 1.4em;
+            margin: 20px 0;
+            color: #555;
+        }
+
+        .btn-restart {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 50px;
+            margin-top: 30px;
+            font-size: 1.2em;
+        }
+
+        .btn-restart:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .legend {
+            background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 2px solid rgba(103, 126, 234, 0.3);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .legend h4 {
+            color: #1e3c72;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 8px;
+        }
+
+        .role-item {
+            padding: 10px 12px;
+            background: white;
+            border-radius: 8px;
+            font-size: 0.85em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .role-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .role-icon {
+            font-size: 1.5em;
+            flex-shrink: 0;
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        .role-text {
+            flex: 1;
+        }
+
+        .role-text strong {
+            color: #1565c0;
+            display: block;
+            margin-bottom: 1px;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Access Control Simulator</h1>
+            <p>Learn Role-Based Access Control</p>
+            <div class="score-section">
+                <div>✅ Correct: <span id="correct">0</span></div>
+                <div>❌ Wrong: <span id="wrong">0</span></div>
+                <div>📊 Scenario: <span id="current">1</span>/6</div>
+            </div>
+        </div>
+
+        <div class="game-area" id="gameArea">
+            <div class="legend">
+                <h4>📋 Who Can Access What?</h4>
+                <div class="roles-grid">
+                    <div class="role-item">
+                        <div class="role-icon">👤</div>
+                        <div class="role-text">
+                            <strong>Employee</strong>
+                            Own files & email
+                        </div>
+                    </div>
+                    <div class="role-item">
+                        <div class="role-icon">👔</div>
+                        <div class="role-text">
+                            <strong>Manager</strong>
+                            Team reports & reviews
+                        </div>
+                    </div>
+                    <div class="role-item">
+                        <div class="role-icon">👥</div>
+                        <div class="role-text">
+                            <strong>HR</strong>
+                            Employee data & payroll
+                        </div>
+                    </div>
+                    <div class="role-item">
+                        <div class="role-icon">💻</div>
+                        <div class="role-text">
+                            <strong>IT Admin</strong>
+                            All systems & accounts
+                        </div>
+                    </div>
+                    <div class="role-item">
+                        <div class="role-icon">💰</div>
+                        <div class="role-text">
+                            <strong>Finance</strong>
+                            Financial records & budgets
+                        </div>
+                    </div>
+                    <div class="role-item">
+                        <div class="role-icon">🎯</div>
+                        <div class="role-text">
+                            <strong>Executive</strong>
+                            All company data
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="scenarioContainer"></div>
+
+            <div class="next-scenario">
+                <button class="btn btn-next" id="nextBtn" onclick="nextScenario()">Next Scenario →</button>
+            </div>
+        </div>
+
+        <div class="game-over" id="gameOver">
+            <h2>🎉 Simulation Complete!</h2>
+            <p>Correct Decisions: <span id="finalCorrect"></span></p>
+            <p>Wrong Decisions: <span id="finalWrong"></span></p>
+            <p id="rating"></p>
+            <p id="securityTip"></p>
+            <button class="btn btn-restart" onclick="restartGame()">Start New Simulation</button>
+        </div>
+    </div>
+
+    <script>
+        const roleIcons = {
+            "Marketing Manager": "👔",
+            "IT Administrator": "💻",
+            "Department Manager": "👔",
+            "HR Specialist": "👥",
+            "Senior Developer": "👤",
+            "Chief Financial Officer": "🎯"
+        };
+
+        const avatarEmojis = ["👩‍💼", "👨‍💻", "👩‍💻", "👨‍💼", "👩‍🔬", "👨‍🔧"];
+
+        const scenarios = [
+            {
+                description: "Sarah from Marketing wants to view the quarterly sales report.",
+                resource: "Q4 Sales Report (needs Finance or Executive)",
+                employee: {
+                    name: "Sarah Chen",
+                    role: "Marketing Manager",
+                    department: "Marketing",
+                    details: "Senior manager who needs data for a client presentation."
+                },
+                shouldGrant: false,
+                explanation: "DENY: Sarah is a Marketing Manager, not Finance or Executive. Financial reports are restricted to Finance and Executive roles only."
+            },
+            {
+                description: "James from IT needs to reset a user's password.",
+                resource: "User Account System (needs IT Admin)",
+                employee: {
+                    name: "James Rodriguez",
+                    role: "IT Administrator",
+                    department: "Information Technology",
+                    details: "IT Admin handling a routine password reset request."
+                },
+                shouldGrant: true,
+                explanation: "GRANT: James is an IT Administrator with full access to user accounts. This is part of his job."
+            },
+            {
+                description: "Lisa wants to see everyone's salary information.",
+                resource: "Employee Salary Database (needs HR or Executive)",
+                employee: {
+                    name: "Lisa Thompson",
+                    role: "Department Manager",
+                    department: "Operations",
+                    details: "Manager requesting salary data for analysis."
+                },
+                shouldGrant: false,
+                explanation: "DENY: Lisa is a Department Manager, not HR or Executive. Salary information is highly sensitive and restricted."
+            },
+            {
+                description: "Michael from HR needs to update an employee's contact information.",
+                resource: "Employee Personal Info (needs HR)",
+                employee: {
+                    name: "Michael Park",
+                    role: "HR Specialist",
+                    department: "Human Resources",
+                    details: "HR team member processing routine updates."
+                },
+                shouldGrant: true,
+                explanation: "GRANT: Michael is an HR Specialist with proper access to employee information. This is a standard HR task."
+            },
+            {
+                description: "Emily, a developer, wants to access the live production database.",
+                resource: "Production Database (needs IT Admin)",
+                employee: {
+                    name: "Emily Watson",
+                    role: "Senior Developer",
+                    department: "Engineering",
+                    details: "Developer who says there's a critical bug to fix."
+                },
+                shouldGrant: false,
+                explanation: "DENY: Even senior developers don't get production database access. Only IT Admins can access production systems."
+            },
+            {
+                description: "David, the CFO, needs to review the annual financial statements.",
+                resource: "Annual Financial Statements (needs Finance or Executive)",
+                employee: {
+                    name: "David Martinez",
+                    role: "Chief Financial Officer",
+                    department: "Executive",
+                    details: "C-level executive responsible for company finances."
+                },
+                shouldGrant: true,
+                explanation: "GRANT: David is the CFO, an Executive with full access to all financial data. This is essential to his role."
+            }
+        ];
+
+        let currentScenario = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let shuffledScenarios = [];
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function getRandomAvatar() {
+            return avatarEmojis[Math.floor(Math.random() * avatarEmojis.length)];
+        }
+
+        function displayScenario() {
+            const scenario = shuffledScenarios[currentScenario];
+            const container = document.getElementById('scenarioContainer');
+            const roleIcon = roleIcons[scenario.employee.role] || "👤";
+            const avatar = getRandomAvatar();
+
+            container.innerHTML = `
+                <div class="scenario">
+                    <h3>Scenario ${currentScenario + 1}</h3>
+                    <p>${scenario.description}</p>
+                </div>
+
+                <div class="resource-info">
+                    <strong>🔒 Requested Resource:</strong> ${scenario.resource}
+                </div>
+
+                <div class="employee-card">
+                    <div class="employee-main">
+                        <div class="employee-avatar">${avatar}</div>
+                        <div class="employee-info">
+                            <div class="employee-name">${scenario.employee.name}</div>
+                            <div class="employee-role">${roleIcon} ${scenario.employee.role}</div>
+                            <div class="employee-details">
+                                <strong>Department:</strong> ${scenario.employee.department}<br>
+                                ${scenario.employee.details}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="decision-buttons" id="buttons">
+                        <button class="btn btn-grant" onclick="makeDecision(true)">✓ Grant Access</button>
+                        <button class="btn btn-deny" onclick="makeDecision(false)">✗ Deny Access</button>
+                    </div>
+                </div>
+
+                <div class="feedback" id="feedback"></div>
+            `;
+
+            document.getElementById('current').textContent = currentScenario + 1;
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        function makeDecision(grant) {
+            const scenario = shuffledScenarios[currentScenario];
+            const feedback = document.getElementById('feedback');
+            const buttons = document.querySelectorAll('.decision-buttons .btn');
+            
+            buttons.forEach(btn => btn.disabled = true);
+
+            const isCorrect = grant === scenario.shouldGrant;
+
+            if (isCorrect) {
+                correctCount++;
+                document.getElementById('correct').textContent = correctCount;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `
+                    <div class="feedback-icon">✅</div>
+                    <div>Correct Decision!</div>
+                    <div style="margin-top: 10px; font-weight: normal;">${scenario.explanation}</div>
+                `;
+            } else {
+                wrongCount++;
+                document.getElementById('wrong').textContent = wrongCount;
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `
+                    <div class="feedback-icon">❌</div>
+                    <div>Incorrect Decision!</div>
+                    <div style="margin-top: 10px; font-weight: normal;">${scenario.explanation}</div>
+                `;
+            }
+
+            feedback.style.display = 'block';
+
+            if (currentScenario < shuffledScenarios.length - 1) {
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            } else {
+                setTimeout(showGameOver, 2500);
+            }
+        }
+
+        function nextScenario() {
+            currentScenario++;
+            displayScenario();
+        }
+
+        function showGameOver() {
+            document.getElementById('gameArea').style.display = 'none';
+            document.getElementById('gameOver').style.display = 'block';
+            document.getElementById('finalCorrect').textContent = correctCount;
+            document.getElementById('finalWrong').textContent = wrongCount;
+
+            const rating = document.getElementById('rating');
+            const tip = document.getElementById('securityTip');
+
+            const percentage = (correctCount / shuffledScenarios.length) * 100;
+
+            if (percentage === 100) {
+                rating.textContent = "Perfect! You're an access control expert! 🏆";
+                tip.textContent = "You understand that access is based on job roles, not seniority!";
+            } else if (percentage >= 80) {
+                rating.textContent = "Great job! You understand access control well! 🎯";
+                tip.textContent = "Remember: Role permissions prevent unauthorized access.";
+            } else if (percentage >= 60) {
+                rating.textContent = "Good effort! Keep learning! 📚";
+                tip.textContent = "Tip: Check if the person's role matches what's needed.";
+            } else {
+                rating.textContent = "Keep practicing! 💪";
+                tip.textContent = "Key idea: Give people only the access their job needs.";
+            }
+        }
+
+        function restartGame() {
+            currentScenario = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            shuffledScenarios = shuffleArray(scenarios);
+            document.getElementById('correct').textContent = correctCount;
+            document.getElementById('wrong').textContent = wrongCount;
+            document.getElementById('gameArea').style.display = 'block';
+            document.getElementById('gameOver').style.display = 'none';
+            displayScenario();
+        }
+
+        shuffledScenarios = shuffleArray(scenarios);
+        displayScenario();
+    </script>
+</body>
+</html>
