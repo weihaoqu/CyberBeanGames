@@ -1,0 +1,13 @@
+node_modules
+.git
+.env
+.env.local
+*.md
+.DS_Store
+client/node_modules
+client/dist
+cyberanalyst/node_modules
+cyberanalyst/build
+PhishTank/node_modules
+PhishTank/dist
+server/node_modules
