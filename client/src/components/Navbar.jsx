@@ -7,7 +7,7 @@ function Navbar() {
   return (
     <nav className="navbar">
       <Link to="/" className="nav-brand">
-        <span className="brand-icon">🎮</span>
+        <span className="brand-mark">//</span>
         <span className="brand-text">CBG</span>
       </Link>
       <div className="nav-links">
@@ -15,13 +15,19 @@ function Navbar() {
           to="/"
           className={`nav-link ${location.pathname === "/" ? "active" : ""}`}
         >
-          ARCADE
+          [ARCADE]
         </Link>
         <Link
           to="/credits"
           className={`nav-link ${location.pathname === "/credits" ? "active" : ""}`}
         >
-          CREDITS
+          [CREDITS]
+        </Link>
+        <Link
+          to="/admin"
+          className={`nav-link ${location.pathname === "/admin" ? "active" : ""}`}
+        >
+          [ADMIN]
         </Link>
       </div>
     </nav>

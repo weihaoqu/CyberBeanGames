@@ -792,6 +792,12 @@
                 rating.textContent = "Keep practicing! 💪";
                 tip.textContent = "Key idea: Give people only the access their job needs.";
             }
+
+            window.parent.postMessage({
+                type: 'gameComplete', game: 'access-control', success: percentage >= 60,
+                score: correctCount,
+                details: { correctCount: correctCount, wrongCount: wrongCount, totalScenarios: shuffledScenarios.length, percentage: percentage }
+            }, '*');
         }
 
         function restartGame() {

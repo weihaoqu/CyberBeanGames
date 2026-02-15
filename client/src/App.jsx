@@ -4,6 +4,8 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import GamePage from "./pages/GamePage";
 import Credits from "./pages/Credits";
+import AdminDashboard from "./pages/AdminDashboard";
+import ExitSurvey from "./pages/ExitSurvey";
 import "./App.css";
 
 function App() {
@@ -17,6 +19,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/game/:gameSlug" element={<GamePage />} />
             <Route path="/credits" element={<Credits />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/survey" element={<ExitSurvey />} />
           </Routes>
         </main>
         <Footer />

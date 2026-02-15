@@ -1257,6 +1257,11 @@ const CyberSOCAnalyst = () => {
             
             setShowResults(true);
             setGameState('victory');
+            window.parent.postMessage({
+              type: 'gameComplete', game: 'cyberanalyst', success: true,
+              score: (maxPlayerHealth * 50) + (playerHealth * 20),
+              details: { totalScore: totalScore + (maxPlayerHealth * 50) + (playerHealth * 20), playerHealth }
+            }, '*');
           } else {
             // Next question
             setTimeout(() => {
@@ -1283,6 +1288,11 @@ const CyberSOCAnalyst = () => {
           if (playerHealth - 1 <= 0) {
             setShowResults(true);
             setGameState('defeat');
+            window.parent.postMessage({
+              type: 'gameComplete', game: 'cyberanalyst', success: false,
+              score: totalScore,
+              details: { totalScore, playerHealth: 0 }
+            }, '*');
           } else {
             // Next question
             setTimeout(() => {

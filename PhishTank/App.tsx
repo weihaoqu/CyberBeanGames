@@ -64,6 +64,25 @@ const App: React.FC = () => {
   // Modals
   const [modal, setModal] = useState<{type: 'success'|'error', title: string, message: string, amount: number} | null>(null);
 
+  // Research: track milestone postMessage firing
+  const milestonesSent = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    const { reputation, cash } = gameState;
+    let milestone: string | null = null;
+    if (reputation <= 0) milestone = 'rep_zero';
+    else if (reputation >= 100) milestone = 'rep_max';
+    else if (cash <= 0) milestone = 'cash_zero';
+    else if (cash >= 2000) milestone = 'cash_high';
+    if (milestone && !milestonesSent.current.has(milestone)) {
+      milestonesSent.current.add(milestone);
+      window.parent.postMessage({
+        type: 'gameComplete', game: 'phishtank', success: reputation >= 100 || cash >= 2000,
+        score: reputation,
+        details: { reputation, cash, day: gameState.day, milestone }
+      }, '*');
+    }
+  }, [gameState]);
+
   // Loop Refs
   const lastEventTime = useRef(Date.now());
 

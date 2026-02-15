@@ -1,0 +1,155 @@
+.demo-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.demo-modal {
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-lime);
+  max-width: 520px;
+  width: 100%;
+  padding: 32px;
+}
+
+.demo-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.demo-subtitle {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+}
+
+.demo-field {
+  margin-bottom: 20px;
+}
+
+.demo-label {
+  display: block;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--accent-lime);
+  margin-bottom: 8px;
+}
+
+.demo-select,
+.demo-radio-group {
+  width: 100%;
+}
+
+.demo-select {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.82rem;
+  padding: 10px 12px;
+  background: var(--bg-card);
+  border: 2px solid var(--border-hard);
+  color: var(--text-primary);
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.demo-select:focus {
+  border-color: var(--accent-lime);
+}
+
+.demo-radio-group {
+  display: flex;
+  gap: 4px;
+}
+
+.demo-radio-option {
+  flex: 1;
+  text-align: center;
+}
+
+.demo-radio-option input {
+  display: none;
+}
+
+.demo-radio-option label {
+  display: block;
+  padding: 10px 4px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  border: 2px solid var(--border-hard);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.demo-radio-option input:checked + label {
+  background: var(--accent-lime);
+  color: var(--bg-primary);
+  border-color: var(--accent-lime);
+}
+
+.demo-radio-option label:hover {
+  border-color: var(--accent-lime);
+  color: var(--accent-lime);
+}
+
+.demo-radio-option input:checked + label:hover {
+  color: var(--bg-primary);
+}
+
+.demo-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.demo-checkbox input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent-lime);
+  cursor: pointer;
+}
+
+.demo-checkbox span {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.demo-submit {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin-top: 24px;
+  background: var(--accent-lime);
+  border: none;
+  color: var(--bg-primary);
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.demo-submit:hover {
+  transform: scale(1.02);
+}
+
+.demo-submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}

@@ -2696,6 +2696,12 @@
             updateUI();
             
             modal.classList.add('show');
+
+            window.parent.postMessage({
+                type: 'gameComplete', game: 'lab-escape', success: won,
+                score: gameState.score,
+                details: { won: won, turns: gameState.turn, difficulty: gameState.difficulty, isNewHighScore: isNewHighScore }
+            }, '*');
         }
 
         // Restart game

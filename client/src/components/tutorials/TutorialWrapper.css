@@ -1,0 +1,568 @@
+/* ── Tutorial Wrapper (shared chrome) ── */
+
+.tutorial-screen {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  border: 2px solid var(--game-color, var(--accent-lime));
+  background: var(--bg-secondary, #0a0a0a);
+  padding: 40px;
+}
+
+.tutorial-hero {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.tutorial-hero-icon {
+  font-size: 3.5rem;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.tutorial-hero h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.tutorial-hero p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.tutorial-badges {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.tutorial-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--border-hard, #333);
+  border-radius: 4px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+}
+
+.tutorial-badge-label {
+  color: var(--game-color, var(--accent-lime));
+}
+
+/* ── Custom tutorial content area ── */
+
+.tutorial-custom-content {
+  margin-bottom: 36px;
+}
+
+/* ── Sections grid (concepts + how to play) ── */
+
+.tutorial-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.tutorial-section {
+  border: 1px solid var(--border-hard, #333);
+  padding: 24px;
+}
+
+.tutorial-section h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--game-color, var(--accent-lime));
+  margin-bottom: 16px;
+}
+
+.tutorial-concepts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tutorial-concept {
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid var(--game-color, var(--accent-lime));
+}
+
+.tutorial-concept strong {
+  display: block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.tutorial-concept span {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.tutorial-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  counter-reset: step;
+}
+
+.tutorial-steps li {
+  counter-increment: step;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.tutorial-steps li::before {
+  content: counter(step);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--game-color, var(--accent-lime));
+  color: var(--game-color, var(--accent-lime));
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.tutorial-tips {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tutorial-tips li {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  padding-left: 20px;
+  position: relative;
+}
+
+.tutorial-tips li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--game-color, var(--accent-lime));
+  font-weight: 700;
+}
+
+/* ── Start button ── */
+
+.tutorial-start {
+  text-align: center;
+}
+
+.start-game-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 48px;
+  background: var(--game-color, var(--accent-lime));
+  border: none;
+  color: #000;
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-transform: uppercase;
+}
+
+.start-game-btn:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 30px color-mix(in srgb, var(--game-color, var(--accent-lime)) 40%, transparent);
+}
+
+/* ── Game-specific visual styles ── */
+
+/* SOC Dashboard mockup (Cyber Analyst) */
+.tutorial-dashboard {
+  border: 1px solid var(--border-hard, #333);
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  margin: 0 auto;
+  max-width: 700px;
+}
+
+.tutorial-dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-hard, #333);
+}
+
+.tutorial-dashboard-header span {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  color: var(--game-color);
+  text-transform: uppercase;
+}
+
+.tutorial-alert-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tutorial-alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid;
+  font-size: 0.75rem;
+  font-family: 'Space Mono', monospace;
+}
+
+.tutorial-alert.critical { border-color: #ff4444; }
+.tutorial-alert.warning  { border-color: #ffaa00; }
+.tutorial-alert.info     { border-color: #44aaff; }
+
+.tutorial-alert-severity {
+  font-weight: 700;
+  letter-spacing: 1px;
+  min-width: 70px;
+}
+
+.tutorial-alert.critical .tutorial-alert-severity { color: #ff4444; }
+.tutorial-alert.warning  .tutorial-alert-severity { color: #ffaa00; }
+.tutorial-alert.info     .tutorial-alert-severity { color: #44aaff; }
+
+.tutorial-alert-msg {
+  color: var(--text-secondary);
+}
+
+/* Social media profile mockup (Password Challenge) */
+.tutorial-profile-mockup {
+  border: 1px solid var(--border-hard, #333);
+  max-width: 500px;
+  margin: 0 auto;
+  background: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.tutorial-profile-header {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-hard, #333);
+}
+
+.tutorial-profile-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--game-color);
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.tutorial-profile-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.tutorial-profile-bio {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.tutorial-profile-posts {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tutorial-profile-post {
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.tutorial-profile-post .clue {
+  color: var(--game-color);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+/* Timer bar mockup (Hack the System) */
+.tutorial-timer-mockup {
+  max-width: 600px;
+  margin: 0 auto;
+  border: 1px solid var(--border-hard, #333);
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.tutorial-timer-bar {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tutorial-timer-fill {
+  height: 100%;
+  width: 65%;
+  background: linear-gradient(90deg, var(--game-color), #ff0000);
+  transition: width 0.3s;
+}
+
+.tutorial-score-preview {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 12px;
+}
+
+.tutorial-score-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.tutorial-score-item.correct { color: #00ff41; }
+.tutorial-score-item.wrong   { color: #ff4444; }
+
+.tutorial-scenario-preview {
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid var(--game-color);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Role/Permission matrix (Access Control) */
+.tutorial-matrix {
+  max-width: 600px;
+  margin: 0 auto;
+  border: 1px solid var(--border-hard, #333);
+  background: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.tutorial-matrix table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+}
+
+.tutorial-matrix th,
+.tutorial-matrix td {
+  padding: 10px 12px;
+  text-align: center;
+  border: 1px solid var(--border-hard, #333);
+}
+
+.tutorial-matrix th {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--game-color);
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.tutorial-matrix td {
+  color: var(--text-secondary);
+}
+
+.tutorial-matrix .check { color: #00ff41; font-size: 1rem; }
+.tutorial-matrix .cross { color: #ff4444; font-size: 1rem; }
+
+/* Grid preview (Lab Escape) */
+.tutorial-grid-preview {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.tutorial-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 3px;
+  margin-bottom: 16px;
+}
+
+.tutorial-grid-cell {
+  aspect-ratio: 1;
+  border: 1px solid var(--border-hard, #333);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.tutorial-grid-cell.healthy   { background: rgba(0, 255, 65, 0.15); border-color: rgba(0, 255, 65, 0.3); }
+.tutorial-grid-cell.infected  { background: rgba(255, 0, 0, 0.2); border-color: rgba(255, 0, 0, 0.4); }
+.tutorial-grid-cell.patched   { background: rgba(0, 100, 255, 0.15); border-color: rgba(0, 100, 255, 0.3); }
+.tutorial-grid-cell.quarantined { background: rgba(255, 170, 0, 0.15); border-color: rgba(255, 170, 0, 0.3); }
+
+.tutorial-tool-legend {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.tutorial-tool {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.tutorial-tool-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+}
+
+/* Phone simulator mockup (PhishTank) */
+.tutorial-phone {
+  width: 280px;
+  margin: 0 auto;
+  border: 2px solid var(--border-hard, #333);
+  border-radius: 24px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.tutorial-phone-screen {
+  border: 1px solid var(--border-hard, #333);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #111;
+}
+
+.tutorial-phone-header {
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-hard, #333);
+}
+
+.tutorial-phone-messages {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tutorial-message-bubble {
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  max-width: 85%;
+}
+
+.tutorial-message-bubble.incoming {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+  border-bottom-left-radius: 4px;
+  align-self: flex-start;
+}
+
+.tutorial-message-bubble.suspicious {
+  background: rgba(255, 68, 0, 0.15);
+  border: 1px solid rgba(255, 68, 0, 0.3);
+  color: #ffaa88;
+  border-bottom-left-radius: 4px;
+  align-self: flex-start;
+}
+
+.tutorial-phone-stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  border-top: 1px solid var(--border-hard, #333);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+}
+
+.tutorial-phone-stat-label {
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.tutorial-phone-stat-value {
+  color: var(--game-color);
+  font-weight: 700;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .tutorial-screen {
+    padding: 24px 16px;
+  }
+  .tutorial-sections {
+    grid-template-columns: 1fr;
+  }
+  .start-game-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

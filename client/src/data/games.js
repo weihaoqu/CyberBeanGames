@@ -7,6 +7,28 @@ const games = [
     color: "#00ffff",
     icon: "🛡️",
     path: "/games/cyberanalyst/index.html",
+    tutorialComponent: "CyberAnalystTutorial",
+    tutorial: {
+      difficulty: "Medium",
+      duration: "5-10 min",
+      concepts: [
+        { title: "Incident Response", desc: "Learn the process of identifying, analyzing, and responding to security events in real time." },
+        { title: "Phishing Detection", desc: "Spot the telltale signs of phishing emails — spoofed senders, urgent language, and suspicious links." },
+        { title: "Log Analysis", desc: "Read system and network logs to trace attacker activity and reconstruct timelines." },
+        { title: "Social Engineering", desc: "Understand how attackers manipulate people to bypass technical defenses." },
+      ],
+      howToPlay: [
+        "Read incoming event logs and alerts in your analyst dashboard.",
+        "Analyze the evidence — check sender addresses, URLs, timestamps, and log entries.",
+        "Answer questions about each incident to test your analysis.",
+        "Progress through increasingly complex scenarios as your skills improve.",
+      ],
+      tips: [
+        "Pay close attention to email sender domains — one character off can mean a phish.",
+        "Cross-reference timestamps across different log sources to build a timeline.",
+        "When in doubt, treat it as suspicious — real analysts err on the side of caution.",
+      ],
+    },
   },
   {
     slug: "password-challenge",
@@ -16,6 +38,28 @@ const games = [
     color: "#ff00ff",
     icon: "🔐",
     path: "/games/CS450/index.html",
+    tutorialComponent: "PasswordChallengeTutorial",
+    tutorial: {
+      difficulty: "Medium",
+      duration: "5-15 min",
+      concepts: [
+        { title: "OSINT", desc: "Open Source Intelligence — finding publicly available information that attackers use to guess credentials." },
+        { title: "Social Engineering", desc: "How attackers exploit personal details shared online to craft targeted attacks." },
+        { title: "Password Patterns", desc: "Common patterns people use (birthdays, pet names, favorite teams) that make passwords predictable." },
+        { title: "Information Oversharing", desc: "How posting personal details on social media creates security vulnerabilities." },
+      ],
+      howToPlay: [
+        "Select a target profile to investigate.",
+        "Browse their social media posts, bios, and public information for clues.",
+        "Piece together likely password components from what you find.",
+        "Guess their password — you only get 3 attempts, so choose wisely!",
+      ],
+      tips: [
+        "People often use combinations of things they love — pets, sports teams, birthdays.",
+        "Look for patterns: capitalized first letter, numbers at the end, ! as a special character.",
+        "Check every post carefully — even casual mentions can reveal password hints.",
+      ],
+    },
   },
   {
     slug: "hack-the-system",
@@ -25,6 +69,29 @@ const games = [
     color: "#ff006b",
     icon: "⚡",
     path: "/games/CyberGame/index.html",
+    tutorialComponent: "HackTheSystemTutorial",
+    tutorial: {
+      difficulty: "Easy-Hard",
+      duration: "1-2 min",
+      concepts: [
+        { title: "Threat Identification", desc: "Recognizing different types of cyber threats — from malware to insider attacks." },
+        { title: "Network Security", desc: "Understanding firewalls, intrusion detection, and how to protect network infrastructure." },
+        { title: "Incident Response", desc: "Choosing the right defensive action when a security event occurs." },
+        { title: "Security Best Practices", desc: "Industry-standard approaches to preventing and mitigating cyber attacks." },
+      ],
+      howToPlay: [
+        "Start the timer — you're racing against the clock!",
+        "Read each cybersecurity scenario carefully.",
+        "Choose the best defensive response from the options provided.",
+        "Earn +10 points for correct answers, but lose 5 for wrong ones.",
+        "Try to beat the clock and maximize your score!",
+      ],
+      tips: [
+        "Read the full scenario before answering — speed matters, but accuracy matters more.",
+        "Think about what a real security professional would do first.",
+        "If two answers seem right, pick the one that addresses the root cause.",
+      ],
+    },
   },
   {
     slug: "access-control",
@@ -34,6 +101,28 @@ const games = [
     color: "#0066ff",
     icon: "🔑",
     path: "/games/CS450-github/index.html",
+    tutorialComponent: "AccessControlTutorial",
+    tutorial: {
+      difficulty: "Medium",
+      duration: "3-5 min",
+      concepts: [
+        { title: "Role-Based Access Control", desc: "Assigning permissions based on job roles rather than individual users — the foundation of modern access management." },
+        { title: "Principle of Least Privilege", desc: "Users should only have the minimum access needed to do their job — nothing more." },
+        { title: "Separation of Duties", desc: "Critical tasks should require multiple people, preventing any single person from having too much power." },
+        { title: "Data Classification", desc: "Categorizing data by sensitivity level to determine who should have access to what." },
+      ],
+      howToPlay: [
+        "Review the role definitions and their associated permissions.",
+        "Read incoming access requests from employees.",
+        "Decide whether to grant or deny each request based on the requester's role.",
+        "Get scored on your decisions — proper access control protects the organization!",
+      ],
+      tips: [
+        "Always check if the requested access matches the person's role.",
+        "When in doubt, deny — it's safer to escalate than to over-grant.",
+        "Watch for requests that violate separation of duties.",
+      ],
+    },
   },
   {
     slug: "lab-escape",
@@ -43,6 +132,29 @@ const games = [
     color: "#00ff41",
     icon: "🧬",
     path: "/games/labEscape/index.html",
+    tutorialComponent: "LabEscapeTutorial",
+    tutorial: {
+      difficulty: "Easy-Hard",
+      duration: "5-15 min",
+      concepts: [
+        { title: "Malware Propagation", desc: "How malicious software spreads across networks — from one compromised node to many." },
+        { title: "Defense in Depth", desc: "Using multiple layers of security controls so that if one fails, others still protect you." },
+        { title: "Patch Management", desc: "Keeping systems updated to close vulnerabilities before attackers can exploit them." },
+        { title: "Incident Containment", desc: "Isolating infected systems to stop malware from spreading further across the network." },
+      ],
+      howToPlay: [
+        "Choose your difficulty level — harder modes mean faster-spreading malware.",
+        "Monitor the 10×10 grid representing your network nodes.",
+        "Use your tools: Scan to detect, Patch to protect, Quarantine to isolate, Delete to remove.",
+        "Keep the infection rate below 40% to survive!",
+        "Think strategically — you have limited actions per turn.",
+      ],
+      tips: [
+        "Quarantine infected nodes quickly to stop lateral spread.",
+        "Patch healthy nodes near infections to create a firewall effect.",
+        "Scan before you act — you need to know what you're dealing with.",
+      ],
+    },
   },
   {
     slug: "phishtank",
@@ -52,6 +164,30 @@ const games = [
     color: "#ff4400",
     icon: "🎣",
     path: "/games/PhishTank/index.html",
+    tutorialComponent: "PhishTankTutorial",
+    tutorial: {
+      difficulty: "Hard",
+      duration: "10-30 min",
+      concepts: [
+        { title: "Multi-Vector Phishing", desc: "Attackers don't just use email — phishing comes via SMS, phone calls, social media, and more." },
+        { title: "Credential Security", desc: "Protecting your usernames and passwords from harvesting through fake login pages and social tricks." },
+        { title: "Financial Fraud", desc: "Recognizing scams that target your money — fake invoices, prize scams, and payment redirects." },
+        { title: "Social Engineering", desc: "How attackers build trust and create urgency to manipulate you into acting against your interests." },
+      ],
+      howToPlay: [
+        "Navigate the phone simulator — it works just like a real device.",
+        "Receive messages, emails, and phone calls from various contacts.",
+        "Carefully evaluate each communication — is it legitimate or a scam?",
+        "Make your decision: engage, ignore, or report.",
+        "Manage your reputation and cash — wrong decisions have consequences!",
+      ],
+      tips: [
+        "Check sender details carefully — scammers often impersonate known contacts.",
+        "Be suspicious of urgent requests for money or personal information.",
+        "If an offer seems too good to be true, it probably is.",
+        "Legitimate organizations won't pressure you to act immediately.",
+      ],
+    },
   },
 ];
 

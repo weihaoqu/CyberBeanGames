@@ -97,6 +97,12 @@
                 const desc = rankMessages[data.rank_class];
                 document.getElementById('rank-desc').innerHTML =
                     '<p><strong>' + desc.title + '</strong></p><p>' + desc.desc + '</p>';
+
+                window.parent.postMessage({
+                    type: 'gameComplete', game: 'hack-the-system', success: true,
+                    score: data.score,
+                    details: { rank: data.rank, rankClass: data.rank_class, challengesCompleted: data.challenges_completed, totalChallenges: data.total_challenges }
+                }, '*');
             });
     </script>
 </body>

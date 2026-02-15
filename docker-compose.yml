@@ -5,6 +5,8 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3001
+    volumes:
+      - research_data:/app/data
 
   caddy:
     image: caddy:2-alpine
@@ -20,3 +22,4 @@ services:
 volumes:
   caddy_data:
   caddy_config:
+  research_data:

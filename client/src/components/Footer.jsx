@@ -3,10 +3,11 @@ import "./Footer.css";
 function Footer() {
   return (
     <footer className="footer">
-      <div className="footer-line" />
-      <p className="footer-text">
-        CyberBeanGames &mdash; Cybersecurity Training Arcade
-      </p>
+      <div className="footer-inner">
+        <span className="footer-text">CYBERBEANGAMES</span>
+        <span className="footer-divider">/</span>
+        <span className="footer-text">CYBERSECURITY TRAINING ARCADE</span>
+      </div>
     </footer>
   );
 }
