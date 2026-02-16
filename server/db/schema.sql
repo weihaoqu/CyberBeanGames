@@ -66,3 +66,29 @@ CREATE TABLE IF NOT EXISTS exit_survey (
   improvement_comment TEXT,
   timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS creator_survey (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  game_slug TEXT NOT NULL,
+  team_size INTEGER,
+  concept_choice TEXT,
+  concept_translation TEXT,
+  learning_impact TEXT,
+  learning_example TEXT,
+  ai_tools_used TEXT,
+  ai_workflow TEXT,
+  ai_security_accuracy TEXT,
+  peer_learning TEXT,
+  design_challenge TEXT,
+  fun_vs_accuracy TEXT,
+  knowledge_before INTEGER CHECK(knowledge_before BETWEEN 1 AND 5),
+  knowledge_after INTEGER CHECK(knowledge_after BETWEEN 1 AND 5),
+  ai_reliance_logic INTEGER CHECK(ai_reliance_logic BETWEEN 1 AND 5),
+  ai_reliance_ui INTEGER CHECK(ai_reliance_ui BETWEEN 1 AND 5),
+  ai_reliance_security INTEGER CHECK(ai_reliance_security BETWEEN 1 AND 5),
+  ai_reliance_testing INTEGER CHECK(ai_reliance_testing BETWEEN 1 AND 5),
+  recommend_assignment INTEGER CHECK(recommend_assignment BETWEEN 1 AND 5),
+  additional_comments TEXT,
+  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);

@@ -82,6 +82,26 @@ function AdminDashboard() {
     setPassword("");
   }
 
+  function exportCSV() {
+    if (data.length === 0) return;
+    const cols = Object.keys(data[0]);
+    const header = cols.map((c) => `"${c}"`).join(",");
+    const rows = data.map((row) =>
+      cols.map((c) => {
+        const v = row[c] != null ? String(row[c]).replace(/"/g, '""') : "";
+        return `"${v}"`;
+      }).join(",")
+    );
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${tab}_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   function handleSort(col) {
     setSort((prev) => ({
       col,
@@ -128,7 +148,7 @@ function AdminDashboard() {
     );
   }
 
-  const tabs = ["participants", "sessions", "events", "feedback", "demographics", "quiz_responses", "exit_survey"];
+  const tabs = ["participants", "sessions", "events", "feedback", "demographics", "quiz_responses", "exit_survey", "creator_survey"];
   const columns = data.length > 0 ? Object.keys(data[0]) : [];
   const rows = sortedData();
 
@@ -178,8 +198,19 @@ function AdminDashboard() {
             <div className="stat-value">{stats.exitSurveys}</div>
             <div className="stat-label">Exit Surveys</div>
           </div>
+          <div className="stat-card">
+            <div className="stat-value">{stats.creatorSurveys}</div>
+            <div className="stat-label">Creator Surveys</div>
+          </div>
         </div>
       )}
+
+      {/* Research Tools */}
+      <div className="admin-tools">
+        <span className="admin-tools-label">Research Tools:</span>
+        <a href="/docs/interview-protocol.html" target="_blank" rel="noopener" className="admin-tool-link">Interview Protocol</a>
+        <a href="/docs/recruitment-flyer.html" target="_blank" rel="noopener" className="admin-tool-link">Recruitment Flyer</a>
+      </div>
 
       {/* Tabs */}
       <div className="admin-tabs">
@@ -192,6 +223,9 @@ function AdminDashboard() {
             {t}
           </button>
         ))}
+        <button className="admin-export" onClick={exportCSV} disabled={data.length === 0}>
+          EXPORT CSV
+        </button>
       </div>
 
       {/* Table */}

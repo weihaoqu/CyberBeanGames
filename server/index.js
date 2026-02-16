@@ -46,6 +46,9 @@ app.get("/games/PhishTank/*", (req, res) => {
   res.sendFile(path.join(ROOT, "PhishTank", "dist", "index.html"));
 });
 
+// --- Serve research docs ---
+app.use("/docs", express.static(path.join(ROOT, "docs")));
+
 // --- Serve the React frontend (production build) ---
 const clientDist = path.join(ROOT, "client", "dist");
 app.use(express.static(clientDist));

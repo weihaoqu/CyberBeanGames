@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberBeanGames Recruitment Flyer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=Space+Mono:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a1a;
+    color: #e0e0e0;
+    font-family: 'Space Mono', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  @media print {
+    body { padding: 0; background: #0a0a1a; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .no-print { display: none; }
+    .flyer { box-shadow: none; }
+  }
+
+  .flyer {
+    width: 8.5in;
+    min-height: 11in;
+    background: #0d0d20;
+    border: 3px solid #c4ff36;
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .flyer::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(196,255,54,0.04) 39px, rgba(196,255,54,0.04) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(196,255,54,0.04) 39px, rgba(196,255,54,0.04) 40px);
+    pointer-events: none;
+  }
+
+  .badge {
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    color: #c4ff36;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    opacity: 0.8;
+  }
+
+  .title {
+    font-family: 'Syne', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    color: #c4ff36;
+    letter-spacing: 3px;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 1.15rem;
+    color: #e0e0e0;
+    margin-bottom: 36px;
+    line-height: 1.5;
+  }
+
+  .subtitle strong {
+    color: #ff3e6c;
+  }
+
+  .section-head {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #c4ff36;
+    text-transform: uppercase;
+    margin: 28px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(196,255,54,0.2);
+  }
+
+  .games-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .game-pill {
+    background: rgba(196,255,54,0.08);
+    border: 1px solid rgba(196,255,54,0.2);
+    padding: 8px 12px;
+    font-size: 0.75rem;
+    color: #e0e0e0;
+  }
+
+  .game-pill .gname {
+    font-weight: 700;
+    color: #c4ff36;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .details {
+    font-size: 0.8rem;
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+
+  .details li {
+    list-style: none;
+    padding-left: 20px;
+    position: relative;
+  }
+  .details li::before {
+    content: '>';
+    position: absolute;
+    left: 0;
+    color: #c4ff36;
+    font-weight: 700;
+  }
+
+  .qr-section {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin-top: 32px;
+    padding: 24px;
+    background: rgba(196,255,54,0.05);
+    border: 2px solid #c4ff36;
+  }
+
+  .qr-placeholder {
+    width: 160px;
+    height: 160px;
+    border: 2px dashed rgba(196,255,54,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.65rem;
+    color: rgba(196,255,54,0.5);
+    text-align: center;
+    line-height: 1.4;
+    padding: 8px;
+  }
+
+  .qr-text {
+    flex: 1;
+  }
+
+  .qr-text .scan {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #c4ff36;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .qr-text .url {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ff3e6c;
+    margin-bottom: 8px;
+  }
+
+  .qr-text p {
+    font-size: 0.75rem;
+    color: #999;
+    line-height: 1.6;
+  }
+
+  .footer-bar {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(196,255,54,0.15);
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.65rem;
+    color: #666;
+  }
+
+  .irb {
+    font-size: 0.7rem;
+    color: #888;
+    margin-top: 20px;
+    line-height: 1.6;
+    padding: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .print-btn {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    padding: 12px 24px;
+    background: #c4ff36;
+    color: #0a0a1a;
+    border: none;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+  }
+  .print-btn:hover { opacity: 0.85; }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">Print Flyer</button>
+
+<div class="flyer">
+  <div class="badge">Monmouth University Cybersecurity Lab</div>
+  <div class="title">CyberBean<br>Games</div>
+  <p class="subtitle">
+    Play <strong>6 free cybersecurity games</strong> built by students.<br>
+    Learn to spot phishing, defend networks, and think like a hacker.
+  </p>
+
+  <div class="section-head">The Games</div>
+  <div class="games-grid">
+    <div class="game-pill">
+      <span class="gname">Lab Escape</span>
+      Network security puzzles
+    </div>
+    <div class="game-pill">
+      <span class="gname">PhishTank</span>
+      Spot phishing attacks
+    </div>
+    <div class="game-pill">
+      <span class="gname">Cyber Analyst</span>
+      Incident response simulation
+    </div>
+    <div class="game-pill">
+      <span class="gname">CS450 Challenge</span>
+      Security trivia battle
+    </div>
+    <div class="game-pill">
+      <span class="gname">CyberGame</span>
+      Cybersecurity adventure
+    </div>
+    <div class="game-pill">
+      <span class="gname">Dark Depths</span>
+      Social engineering defense
+    </div>
+  </div>
+
+  <div class="section-head">What to Expect</div>
+  <ul class="details">
+    <li>Play on your phone, tablet, or computer — works everywhere</li>
+    <li>Each game takes 5–15 minutes</li>
+    <li>No downloads, no sign-ups — just open the link and play</li>
+    <li>Optional short surveys help our research (completely anonymous)</li>
+    <li>Learn real cybersecurity skills while having fun</li>
+  </ul>
+
+  <div class="section-head">Who Can Participate</div>
+  <ul class="details">
+    <li>Anyone 18 or older</li>
+    <li>No cybersecurity experience needed</li>
+    <li>All majors and backgrounds welcome</li>
+  </ul>
+
+  <div class="qr-section">
+    <div class="qr-placeholder">
+      [ QR CODE ]<br><br>
+      Generate at:<br>qr-code-generator.com<br>
+      for cyberbeangames.com
+    </div>
+    <div class="qr-text">
+      <div class="scan">Scan to Play</div>
+      <div class="url">cyberbeangames.com</div>
+      <p>Open on any device. Play as many games as you want. Your participation helps advance cybersecurity education research.</p>
+    </div>
+  </div>
+
+  <div class="irb">
+    <strong>Research Study Notice:</strong> This platform includes optional data collection approved by the Monmouth University IRB. Participation in the research is voluntary — you can play the games without consenting to data collection. All data is anonymized. Contact the research team for questions.
+  </div>
+
+  <div class="footer-bar">
+    <span>Monmouth University &bull; CS450 Security Course</span>
+    <span>Spring 2026</span>
+  </div>
+</div>
+
+</body>
+</html>

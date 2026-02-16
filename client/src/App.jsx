@@ -6,6 +6,7 @@ import GamePage from "./pages/GamePage";
 import Credits from "./pages/Credits";
 import AdminDashboard from "./pages/AdminDashboard";
 import ExitSurvey from "./pages/ExitSurvey";
+import CreatorSurvey from "./pages/CreatorSurvey";
 import "./App.css";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
             <Route path="/credits" element={<Credits />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/survey" element={<ExitSurvey />} />
+            <Route path="/creator-survey" element={<CreatorSurvey />} />
           </Routes>
         </main>
         <Footer />

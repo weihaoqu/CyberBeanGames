@@ -60,7 +60,8 @@ router.get("/admin/stats", adminAuth, (req, res) => {
   const demographics = db.prepare("SELECT COUNT(*) AS count FROM demographics").get().count;
   const quizResponses = db.prepare("SELECT COUNT(*) AS count FROM quiz_responses").get().count;
   const exitSurveys = db.prepare("SELECT COUNT(*) AS count FROM exit_survey").get().count;
-  res.json({ participants, sessions, events, feedback: feedbackCount, avgRating, demographics, quizResponses, exitSurveys });
+  const creatorSurveys = db.prepare("SELECT COUNT(*) AS count FROM creator_survey").get().count;
+  res.json({ participants, sessions, events, feedback: feedbackCount, avgRating, demographics, quizResponses, exitSurveys, creatorSurveys });
 });
 
 // ── GET /admin/participants ──
@@ -350,6 +351,42 @@ router.post("/exit-survey", (req, res) => {
     wouldRecommend || null, improvementComment || null
   );
   res.json({ success: true });
+});
+
+// ── POST /creator-survey ──
+const CREATOR_PASSWORD = process.env.CREATOR_PASSWORD || "cs450";
+
+router.post("/creator-survey", (req, res) => {
+  const { password, ...data } = req.body;
+  if (password !== CREATOR_PASSWORD) {
+    return res.status(401).json({ error: "Wrong password" });
+  }
+
+  const stmt = db.prepare(`
+    INSERT INTO creator_survey (name, game_slug, team_size, concept_choice, concept_translation,
+      learning_impact, learning_example, ai_tools_used, ai_workflow, ai_security_accuracy,
+      peer_learning, design_challenge, fun_vs_accuracy, knowledge_before, knowledge_after,
+      ai_reliance_logic, ai_reliance_ui, ai_reliance_security, ai_reliance_testing,
+      recommend_assignment, additional_comments)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+  stmt.run(
+    data.name, data.gameSlug, data.teamSize,
+    data.conceptChoice, data.conceptTranslation,
+    data.learningImpact, data.learningExample,
+    data.aiToolsUsed, data.aiWorkflow, data.aiSecurityAccuracy,
+    data.peerLearning, data.designChallenge, data.funVsAccuracy,
+    data.knowledgeBefore, data.knowledgeAfter,
+    data.aiRelianceLogic, data.aiRelianceUi,
+    data.aiRelianceSecurity, data.aiRelianceTesting,
+    data.recommendAssignment, data.additionalComments || null
+  );
+  res.json({ success: true });
+});
+
+// ── GET /admin/creator_survey ──
+router.get("/admin/creator_survey", adminAuth, (req, res) => {
+  res.json(db.prepare("SELECT * FROM creator_survey ORDER BY id DESC").all());
 });
 
 export default router;

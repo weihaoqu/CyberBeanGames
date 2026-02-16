@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creator Interview Protocol — CyberBeanGames</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    color: #1a1a2e;
+    background: #fff;
+    line-height: 1.7;
+    padding: 48px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  @media print {
+    body { padding: 24px; font-size: 11pt; }
+    .no-print { display: none; }
+    .page-break { page-break-before: always; }
+  }
+
+  h1 {
+    font-family: 'Merriweather', serif;
+    font-size: 1.6rem;
+    margin-bottom: 4px;
+    color: #0f3460;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 32px;
+    border-bottom: 2px solid #0f3460;
+    padding-bottom: 16px;
+  }
+
+  h2 {
+    font-family: 'Merriweather', serif;
+    font-size: 1.15rem;
+    color: #0f3460;
+    margin: 32px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #16213e;
+    margin: 20px 0 8px;
+  }
+
+  p { margin-bottom: 12px; }
+
+  .meta-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+    font-size: 0.9rem;
+  }
+  .meta-table td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+  }
+  .meta-table td:first-child {
+    font-weight: 700;
+    width: 180px;
+    background: #f7f7fc;
+  }
+  .meta-table .blank { min-width: 200px; }
+
+  .question-block {
+    margin: 16px 0;
+    padding: 12px 16px;
+    background: #f7f7fc;
+    border-left: 3px solid #0f3460;
+  }
+
+  .question-block .q {
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .question-block .probe {
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+  }
+
+  .notes-area {
+    border: 1px dashed #ccc;
+    min-height: 60px;
+    margin: 8px 0 16px;
+    padding: 8px;
+    font-size: 0.85rem;
+    color: #999;
+  }
+
+  .checklist {
+    list-style: none;
+    padding: 0;
+  }
+  .checklist li {
+    padding: 4px 0 4px 28px;
+    position: relative;
+  }
+  .checklist li::before {
+    content: '☐';
+    position: absolute;
+    left: 4px;
+  }
+
+  .duration {
+    display: inline-block;
+    background: #e8f0fe;
+    color: #0f3460;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-left: 8px;
+  }
+
+  .print-btn {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    padding: 10px 20px;
+    background: #0f3460;
+    color: #fff;
+    border: none;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  .print-btn:hover { background: #16213e; }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">Print / Save PDF</button>
+
+<h1>Semi-Structured Interview Protocol</h1>
+<p class="subtitle">CyberBeanGames — Creator Learning Study (Study A)<br>
+Monmouth University Cybersecurity Lab &bull; Spring 2026</p>
+
+<table class="meta-table">
+  <tr><td>Interviewer</td><td class="blank"></td></tr>
+  <tr><td>Interviewee (initials)</td><td class="blank"></td></tr>
+  <tr><td>Game built</td><td class="blank"></td></tr>
+  <tr><td>Date &amp; time</td><td class="blank"></td></tr>
+  <tr><td>Duration target</td><td>20–30 minutes</td></tr>
+  <tr><td>Recording consent</td><td>☐ Yes &ensp; ☐ No</td></tr>
+</table>
+
+<h2>Pre-Interview Checklist</h2>
+<ul class="checklist">
+  <li>Confirm IRB consent form signed</li>
+  <li>Confirm recording consent (if applicable)</li>
+  <li>Ensure quiet environment</li>
+  <li>Have the participant's game loaded for reference</li>
+  <li>Review their creator survey responses (if already submitted)</li>
+</ul>
+
+<h2>Opening Script</h2>
+<p><em>"Thank you for agreeing to this interview. I'm researching how building cybersecurity education games affects students' own learning and technical skills. This interview will take about 20–30 minutes. Your responses are confidential and will be reported using pseudonyms. You can skip any question or stop at any time. [If recording:] May I record this conversation for transcription purposes?"</em></p>
+
+<h2>Section 1: Background &amp; Motivation <span class="duration">~5 min</span></h2>
+
+<div class="question-block">
+  <div class="q">1.1 Tell me about your background with cybersecurity before this course.</div>
+  <div class="probe">Probe: Courses taken? Personal interest? Career goals?</div>
+</div>
+
+<div class="question-block">
+  <div class="q">1.2 Why did you choose the specific cybersecurity concept your game teaches?</div>
+  <div class="probe">Probe: Was it something you were confident in, or something you wanted to learn more about?</div>
+</div>
+
+<div class="question-block">
+  <div class="q">1.3 Had you built a game or interactive learning tool before this project?</div>
+</div>
+
+<h2>Section 2: Design Process &amp; Learning <span class="duration">~8 min</span></h2>
+
+<div class="question-block">
+  <div class="q">2.1 Walk me through how you went from concept to finished game. What was your process?</div>
+  <div class="probe">Probe: Planning, prototyping, testing, iteration</div>
+</div>
+
+<div class="question-block">
+  <div class="q">2.2 At what point during development did you feel you understood the security concept most deeply?</div>
+  <div class="probe">Probe: Was there an "aha" moment? What triggered it?</div>
+</div>
+
+<div class="question-block">
+  <div class="q">2.3 Did you discover any gaps in your own knowledge while building the game?</div>
+  <div class="probe">Probe: How did you address those gaps? What resources did you use?</div>
+</div>
+
+<div class="question-block">
+  <div class="q">2.4 How did you decide what to simplify vs. keep technically accurate?</div>
+  <div class="probe">Probe: Can you give a specific example of a tradeoff you made?</div>
+</div>
+
+<div class="question-block">
+  <div class="q">2.5 Did playtesting reveal anything surprising about how people understood (or misunderstood) the concept?</div>
+</div>
+
+<h2 class="page-break">Section 3: AI Tool Usage <span class="duration">~8 min</span></h2>
+
+<div class="question-block">
+  <div class="q">3.1 Which AI tools did you use, and how did you decide what to use AI for vs. do yourself?</div>
+  <div class="probe">Probe: Game logic? UI? Security content? Testing?</div>
+</div>
+
+<div class="question-block">
+  <div class="q">3.2 Can you describe a specific instance where the AI generated something incorrect about the security concept?</div>
+  <div class="probe">Probe: How did you detect the error? How did you fix it?</div>
+</div>
+
+<div class="question-block">
+  <div class="q">3.3 Did using AI tools change how deeply you engaged with the security material?</div>
+  <div class="probe">Probe: Did it help or hinder your learning? Did you just accept AI output or critically evaluate it?</div>
+</div>
+
+<div class="question-block">
+  <div class="q">3.4 If you were to do this project again, would you use AI differently? How?</div>
+</div>
+
+<div class="question-block">
+  <div class="q">3.5 Do you think the AI helped you build a better game, a worse game, or about the same as you would have built without it?</div>
+  <div class="probe">Probe: In terms of accuracy? Engagement? Polish?</div>
+</div>
+
+<h2>Section 4: Reflection &amp; Impact <span class="duration">~5 min</span></h2>
+
+<div class="question-block">
+  <div class="q">4.1 How does building a game compare to other ways you've learned cybersecurity concepts (lectures, labs, readings)?</div>
+</div>
+
+<div class="question-block">
+  <div class="q">4.2 Has this project changed how you think about cybersecurity education for non-technical audiences?</div>
+</div>
+
+<div class="question-block">
+  <div class="q">4.3 If a friend was about to start a similar project, what advice would you give them?</div>
+</div>
+
+<div class="question-block">
+  <div class="q">4.4 Is there anything else about this experience you'd like to share that I haven't asked about?</div>
+</div>
+
+<h2>Post-Interview Notes</h2>
+<div class="notes-area">Interviewer reflections, notable quotes, themes observed:</div>
+<div class="notes-area">Follow-up items or clarifications needed:</div>
+
+<h2>Coding Guide (for analysis)</h2>
+<p>Use the following thematic codes during transcript analysis:</p>
+<table class="meta-table" style="font-size: 0.85rem;">
+  <tr><td><strong>Code</strong></td><td><strong>Description</strong></td></tr>
+  <tr><td>LEARN-DEEP</td><td>Evidence of deeper understanding through game creation</td></tr>
+  <tr><td>LEARN-GAP</td><td>Discovery of own knowledge gaps</td></tr>
+  <tr><td>DESIGN-TRADEOFF</td><td>Accuracy vs. engagement tradeoffs</td></tr>
+  <tr><td>AI-ASSIST</td><td>Positive use of AI as learning accelerator</td></tr>
+  <tr><td>AI-ERROR</td><td>AI-generated security inaccuracies</td></tr>
+  <tr><td>AI-CRIT</td><td>Critical evaluation of AI output</td></tr>
+  <tr><td>AI-DEPEND</td><td>Over-reliance on AI output</td></tr>
+  <tr><td>PEER</td><td>Learning from other teams' games</td></tr>
+  <tr><td>ENGAGE</td><td>Engagement and motivation factors</td></tr>
+  <tr><td>RECOMMEND</td><td>Recommendations for future iterations</td></tr>
+</table>
+
+</body>
+</html>

@@ -133,10 +133,54 @@
 /* ── Tabs ── */
 .admin-tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 2px;
   margin-bottom: 0;
   border-bottom: 2px solid var(--border-hard);
 }
+
+.admin-export {
+  margin-left: auto;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 8px 16px;
+  background: var(--accent-lime);
+  color: #000;
+  border: none;
+  cursor: pointer;
+}
+.admin-export:hover { opacity: 0.85; }
+.admin-export:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.admin-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: rgba(196,255,54,0.05);
+  border: 1px solid var(--border-hard);
+}
+
+.admin-tools-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+}
+
+.admin-tool-link {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-lime);
+  text-decoration: none;
+  padding: 4px 10px;
+  border: 1px solid var(--accent-lime);
+}
+.admin-tool-link:hover { background: var(--accent-lime); color: #000; }
 
 .admin-tab {
   font-family: 'Space Mono', monospace;

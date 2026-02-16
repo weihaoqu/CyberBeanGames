@@ -24,6 +24,12 @@ function Navbar() {
           [CREDITS]
         </Link>
         <Link
+          to="/creator-survey"
+          className={`nav-link ${location.pathname === "/creator-survey" ? "active" : ""}`}
+        >
+          [CREATORS]
+        </Link>
+        <Link
           to="/admin"
           className={`nav-link ${location.pathname === "/admin" ? "active" : ""}`}
         >
