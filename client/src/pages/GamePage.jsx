@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useRef, useState, useCallback, useEffect, lazy, Suspense } from "react";
 import games from "../data/games";
 import postQuizzes, { generalPreQuiz } from "../data/quizData";
@@ -19,6 +19,7 @@ const tutorialComponents = {
 
 function GamePage() {
   const { gameSlug } = useParams();
+  const navigate = useNavigate();
   const game = games.find((g) => g.slug === gameSlug);
   const iframeContainerRef = useRef(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -196,6 +197,17 @@ function GamePage() {
     document.addEventListener("fullscreenchange", handleChange);
     return () => document.removeEventListener("fullscreenchange", handleChange);
   }, []);
+
+  // ── Toggle mobile-game-active class on body when game iframe is showing ──
+  const isGameActive = !showTutorial && viewedTutorial && consentAnswered && demoCompleted && preQuizDone;
+  useEffect(() => {
+    if (isGameActive) {
+      document.body.classList.add("mobile-game-active");
+    } else {
+      document.body.classList.remove("mobile-game-active");
+    }
+    return () => document.body.classList.remove("mobile-game-active");
+  }, [isGameActive]);
 
   // ── Not found ──
   if (!game) {
@@ -467,7 +479,7 @@ function GamePage() {
                 title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
                 style={{ "--game-color": game.color }}
               >
-                {isFullscreen ? "EXIT FS" : "FULLSCREEN"}
+                {isFullscreen ? "⛶" : "⛶"}<span className="btn-label"> {isFullscreen ? "EXIT FS" : "FULLSCREEN"}</span>
               </button>
             </>
           )}
@@ -513,7 +525,7 @@ function GamePage() {
           sessionId={sessionId}
           questions={postQuestions}
           quizDone={postQuizDone}
-          onClose={() => setShowPostSurvey(false)}
+          onClose={() => navigate("/")}
         />
       )}
     </div>

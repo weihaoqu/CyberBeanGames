@@ -2,7 +2,7 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 20px 32px;
-  height: calc(100vh - 140px);
+  height: calc(100dvh - 140px);
   display: flex;
   flex-direction: column;
 }
@@ -297,11 +297,50 @@
 
 @media (max-width: 767px) {
   .game-page {
-    padding: 16px;
+    padding: 8px;
+    height: 100dvh;
+    overflow: hidden;
   }
   .game-header {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 6px;
+    gap: 6px;
+    flex-wrap: nowrap;
+    min-height: 0;
+  }
+  .game-header-right {
+    gap: 6px;
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+  .game-title {
+    font-size: 0.85rem;
+  }
+  .game-icon {
+    font-size: 1.3rem;
+  }
+  .game-info {
+    gap: 8px;
+  }
+  .game-creator {
+    display: none;
+  }
+  .back-btn,
+  .finish-btn,
+  .fullscreen-btn,
+  .tutorial-toggle-btn {
+    padding: 6px 10px;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+  }
+  .fullscreen-btn {
+    display: none;
+  }
+  .iframe-container {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
   }
   .consent-screen {
     padding: 24px 16px;

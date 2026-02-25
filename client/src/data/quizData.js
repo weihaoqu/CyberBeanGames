@@ -12,17 +12,6 @@ export const generalPreQuiz = [
     correct: 1,
   },
   {
-    id: "gen-2",
-    question: "Why are passwords based on personal information (pet names, birthdays) considered weak?",
-    options: [
-      "They are too short to be secure",
-      "Attackers can find this information on social media and guess them",
-      "They don't contain special characters",
-      "They expire faster than random passwords",
-    ],
-    correct: 1,
-  },
-  {
     id: "gen-3",
     question: "The 'Principle of Least Privilege' means:",
     options: [
@@ -43,17 +32,6 @@ export const generalPreQuiz = [
       "Email the attacker to negotiate",
     ],
     correct: 2,
-  },
-  {
-    id: "gen-5",
-    question: "What is the primary purpose of a firewall?",
-    options: [
-      "To encrypt all stored data on disk",
-      "To filter network traffic based on security rules",
-      "To scan files for viruses automatically",
-      "To back up data to the cloud",
-    ],
-    correct: 1,
   },
 ];
 

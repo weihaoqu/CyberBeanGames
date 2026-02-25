@@ -143,7 +143,7 @@ const App: React.FC = () => {
                 setSocialPosts(prev => [newPost, ...prev]);
                 setNotifications(prev => ({ ...prev, [AppID.SOCIAL]: (prev[AppID.SOCIAL] || 0) + 1 }));
             } else if (rand < 0.85 && !callState.isActive) {
-                 // Phone Call
+                 // Phone Call (text-based)
                  const scenario = await generateCallScenario();
                  setCallState({
                      isActive: true,
@@ -154,7 +154,7 @@ const App: React.FC = () => {
                      scenario: scenario
                  });
                  setNotifications(prev => ({ ...prev, [AppID.PHONE]: (prev[AppID.PHONE] || 0) + 1 }));
-                 setActiveApp(AppID.PHONE); // FORCE OPEN
+                 setActiveApp(AppID.PHONE);
             }
         }
 
@@ -230,28 +230,8 @@ const App: React.FC = () => {
 
   const handleCallAnswer = async () => {
       if (!callState.scenario) return;
-      
-      // Update UI immediately
+      // Text-based call — just update status, PhoneApp handles the conversation
       setCallState(prev => ({ ...prev, status: 'connected' }));
-      
-      // Start AI
-      await startLiveCall(
-          callState.scenario, 
-          (userPassed, reason) => {
-              // This callback triggers if AI determines outcome (e.g. user gave info or user said goodbye)
-              if (userPassed) {
-                   handleTransaction(50, reason || "Call handled safely");
-              } else {
-                   handleTransaction(-200, reason || "Sensitive info compromised!");
-              }
-              handleCallHangup(false); // End call via AI trigger
-          },
-          () => {
-             // On Close/Error
-             handleCallHangup(false); // Connection dropped or error, don't penalize
-          },
-          (vol) => setMicVolume(vol)
-      );
   };
 
   const handleCallHangup = (manual: boolean = true) => {

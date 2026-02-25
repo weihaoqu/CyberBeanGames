@@ -47,6 +47,21 @@
       /* Hide scrollbar */
       .no-scrollbar::-webkit-scrollbar { display: none; }
       .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+      /* Mobile: phone fills entire viewport */
+      @media (max-width: 767px) {
+        #bg-canvas, .grid-overlay { display: none; }
+        .phone-device {
+          height: 100dvh !important;
+          width: 100vw !important;
+          max-width: 100vw !important;
+          aspect-ratio: unset !important;
+          border-radius: 0 !important;
+          border-width: 0 !important;
+          box-shadow: none !important;
+          ring: none !important;
+        }
+      }
     </style>
   </head>
   <body>

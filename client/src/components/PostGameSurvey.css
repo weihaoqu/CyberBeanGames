@@ -141,3 +141,39 @@
   text-align: center;
   padding: 32px 0;
 }
+
+@media (max-width: 767px) {
+  .pgs-modal {
+    padding: 20px 16px;
+  }
+  .pgs-title {
+    font-size: 0.95rem;
+  }
+  .pgs-subtitle {
+    font-size: 0.72rem;
+    margin-bottom: 16px;
+  }
+  .pgs-section-label {
+    font-size: 0.72rem;
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+  .pgs-star {
+    font-size: 1.6rem;
+    padding: 2px;
+  }
+  .pgs-comment {
+    font-size: 0.75rem;
+    min-height: 50px;
+    padding: 10px;
+    margin-bottom: 14px;
+  }
+  .pgs-submit {
+    padding: 10px 24px;
+    font-size: 0.8rem;
+  }
+  .pgs-skip {
+    padding: 10px 16px;
+    font-size: 0.7rem;
+  }
+}

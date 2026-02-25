@@ -181,6 +181,31 @@
 
 @media (max-width: 767px) {
   .quiz-screen {
-    padding: 24px 16px;
+    padding: 16px 12px;
+  }
+  .quiz-heading {
+    font-size: 1.05rem;
+  }
+  .quiz-desc {
+    font-size: 0.78rem;
+    margin-bottom: 20px;
+  }
+  .quiz-question {
+    margin-bottom: 18px;
+  }
+  .quiz-q-text {
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+  }
+  .quiz-option {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  .quiz-option-text {
+    font-size: 0.78rem;
+  }
+  .quiz-submit {
+    padding: 12px;
+    font-size: 0.85rem;
   }
 }

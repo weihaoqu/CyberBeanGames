@@ -11,13 +11,13 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({ children, wallpaper }) =
 
   return (
     <div className="fixed inset-0 w-full h-full flex items-center justify-center p-0 sm:p-4 overflow-hidden z-50 select-none">
-      <div 
-        className="relative bg-black rounded-[2.5rem] shadow-2xl ring-1 ring-white/10 overflow-hidden box-border border-[4px] sm:border-[6px] border-black z-20 transition-all duration-300 ease-in-out"
+      <div
+        className="phone-device relative bg-black shadow-2xl ring-1 ring-white/10 overflow-hidden box-border border-black z-20 transition-all duration-300 ease-in-out rounded-[2.5rem] border-[4px] sm:border-[6px]"
         style={{
-            height: 'min(80vh, 820px)', 
+            height: 'min(80vh, 820px)',
             width: 'auto',
-            maxWidth: '90vw', 
-            aspectRatio: '10 / 19', 
+            maxWidth: '90vw',
+            aspectRatio: '10 / 19',
             boxShadow: '0 0 0 4px #1f2937, 0 30px 60px -10px rgba(0, 0, 0, 0.9), 0 0 60px rgba(6, 182, 212, 0.3)'
         }}
       >

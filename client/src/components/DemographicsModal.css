@@ -153,3 +153,36 @@
   cursor: not-allowed;
   transform: none;
 }
+
+@media (max-width: 767px) {
+  .demo-modal {
+    padding: 20px 16px;
+  }
+  .demo-title {
+    font-size: 0.95rem;
+  }
+  .demo-subtitle {
+    font-size: 0.72rem;
+    margin-bottom: 20px;
+  }
+  .demo-field {
+    margin-bottom: 14px;
+  }
+  .demo-label {
+    font-size: 0.72rem;
+    margin-bottom: 6px;
+  }
+  .demo-select {
+    font-size: 0.78rem;
+    padding: 8px 10px;
+  }
+  .demo-radio-option label {
+    padding: 8px 2px;
+    font-size: 0.65rem;
+  }
+  .demo-submit {
+    padding: 12px;
+    font-size: 0.85rem;
+    margin-top: 16px;
+  }
+}

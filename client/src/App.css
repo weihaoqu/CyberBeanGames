@@ -70,3 +70,11 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent-violet);
 }
+
+/* Hide nav/footer during mobile gameplay to maximize iframe space */
+@media (max-width: 767px) {
+  .mobile-game-active .navbar,
+  .mobile-game-active .footer {
+    display: none;
+  }
+}
