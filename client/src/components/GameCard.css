@@ -98,6 +98,14 @@
   border-top: 1px solid var(--border-hard);
 }
 
+.card-meta {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  margin-right: auto;
+}
+
 .card-tag {
   font-size: 0.7rem;
   font-weight: 700;

@@ -9,6 +9,16 @@
   padding: 20px;
 }
 
+.demo-step {
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--accent-lime);
+  margin-bottom: 8px;
+}
+
 .demo-modal {
   background: var(--bg-secondary);
   border: 2px solid var(--accent-lime);

@@ -15,6 +15,11 @@ function GameCard({ game, index }) {
         <p className="card-desc">{game.description}</p>
       </div>
       <div className="card-bottom">
+        {game.tutorial && (
+          <span className="card-meta">
+            {game.tutorial.difficulty} · {game.tutorial.duration}
+          </span>
+        )}
         <span className="card-tag">PLAY</span>
         <span className="card-arrow">&rarr;</span>
       </div>

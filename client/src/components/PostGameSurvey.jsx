@@ -39,7 +39,6 @@ function PostGameSurvey({ gameColor, gameSlug, sessionId, questions, quizDone, o
       console.error("Feedback error:", err);
     }
     setSubmitted(true);
-    setTimeout(onClose, 1500);
   };
 
   if (submitted) {
@@ -49,8 +48,11 @@ function PostGameSurvey({ gameColor, gameSlug, sessionId, questions, quizDone, o
           <div className="pgs-thanks">
             <div className="pgs-title">THANKS!</div>
             <div className="pgs-subtitle">Your responses have been recorded.</div>
-            <div className="pgs-survey-link" style={{ borderTop: "none", paddingTop: 12 }}>
-              <a href="/survey">Take the full exit survey to help us even more →</a>
+            <div className="pgs-thanks-actions">
+              <a href="/survey" className="pgs-submit" style={{ textDecoration: "none", display: "inline-block", textAlign: "center" }}>
+                TAKE EXIT SURVEY
+              </a>
+              <button className="pgs-skip" onClick={onClose}>BACK TO ARCADE</button>
             </div>
           </div>
         </div>
@@ -64,7 +66,7 @@ function PostGameSurvey({ gameColor, gameSlug, sessionId, questions, quizDone, o
         <div className="pgs-title">HOW WAS THE GAME?</div>
         <div className="pgs-subtitle">Your feedback helps us improve</div>
 
-        <div className="pgs-section-label">Engagement Rating</div>
+        <div className="pgs-section-label">How engaging was this game?</div>
         <div className="pgs-stars">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
@@ -77,6 +79,10 @@ function PostGameSurvey({ gameColor, gameSlug, sessionId, questions, quizDone, o
               ★
             </button>
           ))}
+        </div>
+        <div className="pgs-star-labels">
+          <span>Not engaging</span>
+          <span>Very engaging</span>
         </div>
 
         <textarea

@@ -35,6 +35,7 @@ function DemographicsModal({ onComplete }) {
   return (
     <div className="demo-overlay">
       <div className="demo-modal">
+        <div className="demo-step">Step 2 of 4</div>
         <div className="demo-title">QUICK BACKGROUND</div>
         <div className="demo-subtitle">Help us understand our players (takes 30 seconds)</div>
 

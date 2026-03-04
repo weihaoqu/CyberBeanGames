@@ -67,6 +67,17 @@
 .pgs-star.active { color: var(--game-color, #ffaa00); }
 .pgs-star.hover { color: var(--game-color, #ffaa00); opacity: 0.7; }
 
+.pgs-star-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8px;
+  margin-top: -8px;
+  margin-bottom: 16px;
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+}
+
 .pgs-comment {
   width: 100%;
   min-height: 70px;
@@ -140,6 +151,14 @@
 .pgs-thanks {
   text-align: center;
   padding: 32px 0;
+}
+
+.pgs-thanks-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
 }
 
 @media (max-width: 767px) {

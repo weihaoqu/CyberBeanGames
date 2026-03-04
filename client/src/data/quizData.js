@@ -9,7 +9,6 @@ export const generalPreQuiz = [
       "The email uses formal language",
       "The email was sent during business hours",
     ],
-    correct: 1,
   },
   {
     id: "gen-3",
@@ -20,7 +19,6 @@ export const generalPreQuiz = [
       "Access should be granted based on seniority",
       "Privileges should be rotated weekly",
     ],
-    correct: 1,
   },
   {
     id: "gen-4",
@@ -31,7 +29,6 @@ export const generalPreQuiz = [
       "Isolate the infected system to prevent it from spreading",
       "Email the attacker to negotiate",
     ],
-    correct: 2,
   },
 ];
 
@@ -47,8 +44,7 @@ const postQuizzes = {
         "The email has a subject line",
         "It was sent on a weekend",
       ],
-      correct: 1,
-    },
+      },
     {
       id: "ca-post-2",
       question: "Multiple failed login attempts from a single IP address in rapid succession most likely indicates:",
@@ -58,8 +54,7 @@ const postQuizzes = {
         "A brute-force attack trying to guess credentials",
         "A scheduled system backup running",
       ],
-      correct: 2,
-    },
+      },
   ],
 
   "password-challenge": [
@@ -72,8 +67,7 @@ const postQuizzes = {
         "All 8-character passwords are insecure",
         "Only hackers can find social media profiles",
       ],
-      correct: 1,
-    },
+      },
     {
       id: "pc-post-2",
       question: "Which password strategy best protects against the kind of attack shown in this game?",
@@ -83,8 +77,7 @@ const postQuizzes = {
         "Use a unique random passphrase or password manager for each account",
         "Change your password every week to a slight variation",
       ],
-      correct: 2,
-    },
+      },
   ],
 
   "hack-the-system": [
@@ -97,8 +90,7 @@ const postQuizzes = {
         "Report it to IT security without connecting it to any device",
         "Format it and use it for your own files",
       ],
-      correct: 2,
-    },
+      },
     {
       id: "hts-post-2",
       question: "A critical security patch is released for your system. When should you install it?",
@@ -108,8 +100,7 @@ const postQuizzes = {
         "Only install it if your system shows signs of infection",
         "Skip it if your antivirus is up to date",
       ],
-      correct: 1,
-    },
+      },
   ],
 
   "access-control": [
@@ -122,8 +113,7 @@ const postQuizzes = {
         "Grant it temporarily for one day",
         "Ask the manager's supervisor for approval",
       ],
-      correct: 1,
-    },
+      },
     {
       id: "ac-post-2",
       question: "Why is 'separation of duties' important in access control?",
@@ -133,8 +123,7 @@ const postQuizzes = {
         "It reduces the number of employees needed",
         "It makes system administration simpler",
       ],
-      correct: 1,
-    },
+      },
   ],
 
   "lab-escape": [
@@ -147,8 +136,7 @@ const postQuizzes = {
         "You should never delete infected files",
         "Malware always requires professional help to remove",
       ],
-      correct: 1,
-    },
+      },
     {
       id: "le-post-2",
       question: "Worms spread to all adjacent nodes at 100% rate, while trojans are hidden and spread at 50%. What does this teach about real malware?",
@@ -158,8 +146,7 @@ const postQuizzes = {
         "Slower malware is always more dangerous",
         "Hidden malware can be safely ignored",
       ],
-      correct: 1,
-    },
+      },
   ],
 
   phishtank: [
@@ -172,8 +159,7 @@ const postQuizzes = {
         "Ignore the text and contact your bank directly using their official number or app",
         "Forward it to friends to check if they got the same message",
       ],
-      correct: 2,
-    },
+      },
     {
       id: "pt-post-2",
       question: "Someone calls claiming to be from the IRS, saying you owe back taxes and must pay immediately with gift cards or face arrest. This is:",
@@ -183,8 +169,7 @@ const postQuizzes = {
         "Something you should verify by giving them your Social Security Number",
         "A situation where you should pay to be safe, then investigate later",
       ],
-      correct: 1,
-    },
+      },
   ],
 };
 

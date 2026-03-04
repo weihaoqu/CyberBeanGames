@@ -29,12 +29,6 @@ function Navbar() {
         >
           [CREATORS]
         </Link>
-        <Link
-          to="/admin"
-          className={`nav-link ${location.pathname === "/admin" ? "active" : ""}`}
-        >
-          [ADMIN]
-        </Link>
       </div>
     </nav>
   );

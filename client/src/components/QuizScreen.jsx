@@ -1,9 +1,10 @@
 import { useState } from "react";
 import "./QuizScreen.css";
 
-function QuizScreen({ phase, gameSlug, gameColor, questions, onComplete }) {
+function QuizScreen({ phase, gameSlug, gameColor, questions, onComplete, stepIndicator }) {
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [serverResults, setServerResults] = useState(null); // { score, results: [{ questionId, isCorrect, correctAnswer }] }
 
   const allAnswered = questions.every((q) => answers[q.id] !== undefined);
 
@@ -18,16 +19,17 @@ function QuizScreen({ phase, gameSlug, gameColor, questions, onComplete }) {
     const payload = questions.map((q) => ({
       questionId: q.id,
       selectedAnswer: answers[q.id],
-      isCorrect: answers[q.id] === q.correct,
     }));
 
     try {
-      await fetch("/api/research/quiz", {
+      const res = await fetch("/api/research/quiz", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ gameSlug, phase, answers: payload }),
       });
+      const data = await res.json();
+      setServerResults(data);
     } catch (err) {
       console.error("Quiz submit error:", err);
     }
@@ -35,15 +37,22 @@ function QuizScreen({ phase, gameSlug, gameColor, questions, onComplete }) {
     setSubmitted(true);
   };
 
-  const score = submitted
-    ? questions.filter((q) => answers[q.id] === q.correct).length
-    : 0;
-
+  const score = serverResults?.score ?? 0;
   const isPre = phase === "pre";
+  const showHighlights = submitted && !isPre && serverResults?.results;
+
+  // Build a lookup for correct answers from server results
+  const correctMap = {};
+  if (serverResults?.results) {
+    for (const r of serverResults.results) {
+      correctMap[r.questionId] = r.correctAnswer;
+    }
+  }
 
   return (
     <div className="quiz-screen" style={{ "--game-color": gameColor }}>
       <div className="quiz-inner">
+        {stepIndicator}
         <span className="quiz-badge">{isPre ? "KNOWLEDGE CHECK" : "POST-GAME QUIZ"}</span>
         <h2 className="quiz-heading">
           {isPre ? "Quick Knowledge Check" : "What Did You Learn?"}
@@ -62,8 +71,8 @@ function QuizScreen({ phase, gameSlug, gameColor, questions, onComplete }) {
               {q.options.map((opt, oi) => {
                 let cls = "quiz-option";
                 if (answers[q.id] === oi) cls += " selected";
-                if (submitted && oi === q.correct) cls += " correct";
-                if (submitted && answers[q.id] === oi && oi !== q.correct) cls += " incorrect";
+                if (showHighlights && oi === correctMap[q.id]) cls += " correct";
+                if (showHighlights && answers[q.id] === oi && oi !== correctMap[q.id]) cls += " incorrect";
                 return (
                   <div key={oi} className={cls} onClick={() => handleSelect(q.id, oi)}>
                     <div className="quiz-radio" />

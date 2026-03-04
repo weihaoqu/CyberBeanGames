@@ -55,13 +55,22 @@ function CreatorSurvey() {
     && aiRelianceLogic > 0 && aiRelianceUi > 0 && aiRelianceSecurity > 0
     && aiRelianceTesting > 0 && recommendAssignment > 0;
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (password === "cs450") {
-      setAuthed(true);
-      setLoginError("");
-    } else {
-      setLoginError("Wrong password");
+    setLoginError("");
+    try {
+      const res = await fetch("/api/research/creator-auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      if (res.ok) {
+        setAuthed(true);
+      } else {
+        setLoginError("Wrong password");
+      }
+    } catch {
+      setLoginError("Connection error — please try again");
     }
   };
 

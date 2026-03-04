@@ -161,11 +161,11 @@ router.post("/consent", (req, res) => {
   res.json({ participantId, status });
 });
 
-// ── POST /session/start ──
-// Begin a game session
+// ── POST /session/start ── (with participantId fallback for sendBeacon)
+// Accept participantId from body when cookie is missing (sendBeacon loses cookies)
 router.post("/session/start", (req, res) => {
-  const { gameSlug, viewedTutorial } = req.body;
-  const participantId = req.cookies.research_participant;
+  const { gameSlug, viewedTutorial, participantId: bodyPid } = req.body;
+  const participantId = req.cookies.research_participant || bodyPid;
 
   if (!participantId) {
     return res.status(400).json({ error: "No participant ID" });
@@ -186,8 +186,9 @@ router.post("/session/start", (req, res) => {
 
 // ── POST /session/end ──
 // End a game session, calculate duration
+// Accept participantId from body as fallback (sendBeacon loses cookies)
 router.post("/session/end", (req, res) => {
-  const { sessionId } = req.body;
+  const { sessionId, participantId: bodyPid } = req.body;
   if (!sessionId) {
     return res.status(400).json({ error: "Missing sessionId" });
   }
@@ -289,7 +290,19 @@ router.get("/quiz-status/:gameSlug", (req, res) => {
   res.json({ pre: pre.c > 0, post: post.c > 0 });
 });
 
+// ── Quiz Answer Keys (server-side only) ──
+const ANSWER_KEYS = {
+  "gen-1": 1, "gen-3": 1, "gen-4": 2,
+  "ca-post-1": 1, "ca-post-2": 2,
+  "pc-post-1": 1, "pc-post-2": 2,
+  "hts-post-1": 2, "hts-post-2": 1,
+  "ac-post-1": 1, "ac-post-2": 1,
+  "le-post-1": 1, "le-post-2": 1,
+  "pt-post-1": 2, "pt-post-2": 1,
+};
+
 // ── POST /quiz ──
+// Client sends { questionId, selectedAnswer }; server computes isCorrect
 router.post("/quiz", (req, res) => {
   const participantId = req.cookies.research_participant;
   if (!participantId) return res.status(400).json({ error: "No participant ID" });
@@ -304,14 +317,19 @@ router.post("/quiz", (req, res) => {
     VALUES (?, ?, ?, ?, ?, ?)
   `);
 
+  const results = [];
   const insertAll = db.transaction((rows) => {
     for (const a of rows) {
-      stmt.run(participantId, gameSlug, phase, a.questionId, a.selectedAnswer, a.isCorrect ? 1 : 0);
+      const correctAnswer = ANSWER_KEYS[a.questionId];
+      const isCorrect = a.selectedAnswer === correctAnswer;
+      stmt.run(participantId, gameSlug, phase, a.questionId, a.selectedAnswer, isCorrect ? 1 : 0);
+      results.push({ questionId: a.questionId, isCorrect, correctAnswer });
     }
   });
   insertAll(answers);
 
-  res.json({ success: true });
+  const score = results.filter((r) => r.isCorrect).length;
+  res.json({ success: true, score, results });
 });
 
 // ── GET /exit-survey-status ──
@@ -353,8 +371,19 @@ router.post("/exit-survey", (req, res) => {
   res.json({ success: true });
 });
 
-// ── POST /creator-survey ──
+// ── POST /creator-auth ──
+// Validate creator password server-side (no password in client JS)
 const CREATOR_PASSWORD = process.env.CREATOR_PASSWORD || "cs450";
+
+router.post("/creator-auth", (req, res) => {
+  const { password } = req.body;
+  if (password === CREATOR_PASSWORD) {
+    return res.json({ success: true });
+  }
+  res.status(401).json({ error: "Wrong password" });
+});
+
+// ── POST /creator-survey ──
 
 router.post("/creator-survey", (req, res) => {
   const { password, ...data } = req.body;
